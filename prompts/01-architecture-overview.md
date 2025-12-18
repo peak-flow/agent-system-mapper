@@ -84,6 +84,15 @@ Your Architecture Overview MUST follow this structure:
 
 ---
 
+## 0. System Classification
+| Field | Value |
+|-------|-------|
+| Type | {system type} |
+| Evidence | {files/patterns} |
+| Confidence | `[VERIFIED]` |
+
+---
+
 ## 1. System Purpose
 {One paragraph: what this system does and for whom}
 
@@ -108,6 +117,38 @@ Your Architecture Overview MUST follow this structure:
 ---
 
 ## Process
+
+### Step 0: System Classification (Required)
+
+Before documenting anything, classify the system based on evidence.
+
+**Identify the system type:**
+
+| Type | Indicators |
+|------|------------|
+| Framework backend | `composer.json` with Laravel/Symfony, `package.json` with NestJS, `Gemfile` with Rails |
+| CMS | `wp-content/`, `wp-config.php` (WordPress), `sites/` (Drupal) |
+| Frontend SPA | `package.json` with React/Vue/Angular, `src/components/`, no server routes |
+| Static site | HTML files, maybe a build tool, no server-side code |
+| Plain server-side | `.php`/`.js`/`.py` files serving pages directly, no framework structure |
+| Hybrid | Mix of above (document each part) |
+
+**Document your classification:**
+```markdown
+## System Classification
+| Field | Value |
+|-------|-------|
+| Type | {chosen type} |
+| Evidence | {files/patterns that indicate this} |
+| Confidence | `[VERIFIED]` or `[INFERRED]` |
+```
+
+**Critical rule:** All subsequent documentation MUST adapt to the system type.
+- Do NOT assume MVC, controllers, services, or models unless verified
+- Do NOT use framework-specific terminology unless the framework is confirmed
+- Entry points, components, and flows look different in each system type
+
+---
 
 ### Step 1: Gather Metadata
 ```bash
