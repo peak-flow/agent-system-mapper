@@ -9,7 +9,7 @@
 | Verification Status | `Verified` |
 
 ## Verification Summary
-- [VERIFIED]: 24 claims
+- [VERIFIED]: 25 claims
 - [INFERRED]: 3 claims
 - [NOT_FOUND]: 4 items (email, SMS, BookingService, extra tables)
 - [ASSUMED]: 2 items (Laravel conventions)
@@ -33,6 +33,7 @@ SlotBooker is a booking system that allows users to reserve time slots and syncs
 | Component | Location | Responsibility | Verified |
 |-----------|----------|----------------|----------|
 | Models | `app/Models/` | Data entities and relationships | [VERIFIED] |
+| Migrations | `database/migrations/` | Schema definitions (3 tables) | [VERIFIED] |
 | Controller | `app/Http/Controllers/BookingController.php` | HTTP request handling | [VERIFIED] |
 | Service | `app/Services/CalendarService.php` | External API integration | [VERIFIED] |
 | Contract | `app/Contracts/CalendarServiceInterface.php` | Service abstraction | [VERIFIED] |
