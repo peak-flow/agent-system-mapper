@@ -120,9 +120,12 @@ tree -L 3 -d  # Directory structure
 find . -name "*Controller*" -type f
 find . -name "*Service*" -type f
 find . -name "*Model*" -type f
+ls database/migrations/  # Schema definitions
 ```
 
 Document what you find. If you expected something and didn't find it, note `[NOT_FOUND]`.
+
+Note: Mention migrations/schema location in Architecture Overview, but detailed schema documentation belongs in Data Models documentation.
 
 ### Step 3: Identify Entry Points
 Search for routes, commands, listeners:
@@ -189,6 +192,7 @@ The system uses these services:
 | BookingController | `app/Http/Controllers/BookingController.php` | [VERIFIED] |
 | CalendarService | `app/Services/CalendarService.php` | [VERIFIED] |
 | User model | `app/Models/User.php` | [VERIFIED] |
+| Migrations | `database/migrations/` (3 tables) | [VERIFIED] |
 
 [NOT_FOUND: searched "BookingService", "NotificationService" in app/]
 No dedicated BookingService or NotificationService. Booking logic is in controller.
