@@ -104,6 +104,13 @@ Your Architecture Overview MUST follow this structure:
 {2-3 representative flows showing how data moves through system}
 {Each step must reference file:line}
 
+## 3b. Frontend → Backend Interaction Map (If Applicable)
+{For systems with frontend-triggered backend execution}
+{Discovery only - each row is a potential flow to trace in Code Flow documentation}
+
+| Frontend Source | Trigger Type | Backend Target | Handler / Method | Evidence |
+|-----------------|--------------|----------------|------------------|----------|
+
 ## 4. File/Folder Conventions
 {Where to find what - patterns used for organizing code}
 
@@ -175,20 +182,98 @@ grep -rn "Route::" routes/
 grep -rn "protected \$listen" app/
 ```
 
-### Step 4: Trace Key Flows
+### Step 4: Frontend → Backend Interaction Discovery (If Applicable)
+
+Some systems trigger backend execution directly from frontend actions
+without going through traditional routes or controllers.
+
+This step identifies **all user-initiated interaction points** that can
+cause backend logic to run, including event-based and direct invocations.
+
+This step is **discovery only**. Do NOT trace execution logic here.
+
+---
+
+#### What to Identify
+
+Look for frontend actions that initiate backend execution, such as:
+
+- Direct frontend-to-backend method calls
+- Event-based communication (emit, dispatch, hooks)
+- Form submissions (explicit or implicit)
+- JavaScript network requests (fetch, axios, XHR)
+- Inline server-side execution triggered by includes or templates
+
+Do NOT assume these exist. Only document what is VERIFIED.
+
+---
+
+#### Where to Look (Non-Exhaustive)
+
+Depending on system type, evidence may appear in:
+
+- Templates or views (HTML, Blade, JSX, etc.)
+- Frontend scripts (JS/TS)
+- Component definitions
+- Listener or hook registrations
+- Server-side files executed via includes or callbacks
+
+**Common patterns to search (adapt to system type):**
+- `emit`, `dispatch`, `$listeners` (event systems)
+- `wire:`, `x-on:`, `@click` (reactive frameworks)
+- `fetch(`, `axios.`, `$.ajax` (JS requests)
+- `action=`, `method="POST"` (forms)
+
+---
+
+#### Output: Frontend → Backend Interaction Map
+
+Document findings using the table below.
+
+| Frontend Source | Trigger Type | Backend Target | Handler / Method | Evidence |
+|-----------------|--------------|----------------|------------------|----------|
+| `{file}` | `{event | direct call | form submit | request}` | `{component/file}` | `{method/function}` | `[VERIFIED:file:line]` |
+
+Guidelines:
+- Include ONE row per distinct interaction
+- If the trigger uses an event, record the event name
+- If the interaction target cannot be located, mark `[NOT_FOUND]`
+- Do NOT describe internal logic or side effects
+
+---
+
+#### Example (Illustrative Only)
+
+| Frontend Source | Trigger Type | Backend Target | Handler / Method | Evidence |
+|-----------------|--------------|----------------|------------------|----------|
+| calendar.blade.php | direct call | Calendar.php | rescheduleAppointments() | [VERIFIED:calendar.blade.php:42] |
+| calendar.blade.php | event | Scheduler.php | refreshAppointments() | [VERIFIED:Scheduler.php:18] |
+
+---
+
+#### Critical Rules
+
+- This section identifies **entry points only**
+- Do NOT infer behavior or outcomes
+- Do NOT trace execution logic here
+- Detailed behavior belongs in Code Flow documentation
+
+---
+
+### Step 5: Trace Key Flows
 Pick 2-3 important operations. For each:
 1. Start at entry point
 2. Read the method
 3. Follow calls to other files
 4. Document each step with file:line
 
-### Step 5: Find External Dependencies
+### Step 6: Find External Dependencies
 ```bash
 grep -rn "Http::" app/
 grep -rn "env(" config/
 ```
 
-### Step 6: Surface Issues
+### Step 7: Surface Issues
 As you explore, note:
 - Hardcoded values that should be config
 - Duplicated logic
