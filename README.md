@@ -55,9 +55,10 @@ agent-system-mapper/
 │   ├── public/js/
 │   └── config/
 ├── guides/                  # Documentation methodology guides
-│   └── (coming soon)
+│   └── 01-architecture-overview.md
 └── examples/                # Good vs bad documentation examples
-    └── (coming soon)
+    ├── good-architecture-overview.md
+    └── bad-architecture-overview.md
 ```
 
 ---
