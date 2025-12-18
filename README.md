@@ -37,35 +37,77 @@ This repository exists to close that gap.
 
 ---
 
-## Repository Structure
+## Installation
+
+Add the prompts to your project:
+
+```bash
+curl -sL https://raw.githubusercontent.com/peak-flow/agent-system-mapper/master/install.sh | bash
+```
+
+This creates `.pf-agent-system-mapper/` with prompts and examples.
+
+---
+
+## Usage
+
+Ask your AI agent:
 
 ```
-agent-system-mapper/
-├── slotbooker/              # Micro reference app (intentionally imperfect)
-│   ├── app/
-│   │   ├── Models/          # User, Booking, TimeSlot
-│   │   ├── Contracts/       # Service interfaces
-│   │   ├── Services/        # Business logic
-│   │   ├── Http/Controllers/
-│   │   ├── Events/
-│   │   ├── Listeners/
-│   │   └── Providers/
-│   ├── routes/
-│   ├── resources/views/
-│   ├── public/js/
-│   └── config/
-├── guides/                  # Documentation methodology guides
-│   └── 01-architecture-overview.md
-└── examples/                # Good vs bad documentation examples
-    ├── good-architecture-overview.md
-    └── bad-architecture-overview.md
+Read .pf-agent-system-mapper/prompts/01-architecture-overview.md
+and document this codebase following that methodology.
+See examples in .pf-agent-system-mapper/examples/ for good vs bad output.
 ```
 
 ---
 
-## Getting Started
+## Prompts Available
+
+| Prompt | Purpose |
+|--------|---------|
+| `01-architecture-overview.md` | System components & structure |
+| `02-code-flows.md` | Execution path tracing |
+| `03-data-models.md` | Schema & relationships |
+| `04-diagrams.md` | Render verified docs as Mermaid |
+
+---
+
+## Repository Structure
+
+```
+agent-system-mapper/
+├── prompts/                 # AI agent prompts (what gets installed)
+│   ├── 01-architecture-overview.md
+│   ├── 02-code-flows.md
+│   ├── 03-data-models.md
+│   └── 04-diagrams.md
+├── examples/                # Good vs bad documentation examples
+│   ├── good-architecture-overview.md
+│   └── bad-architecture-overview.md
+├── slotbooker/              # Micro reference app (for development only)
+│   ├── app/
+│   │   ├── Models/
+│   │   ├── Contracts/
+│   │   ├── Services/
+│   │   ├── Http/Controllers/
+│   │   ├── Events/
+│   │   ├── Listeners/
+│   │   └── Providers/
+│   ├── database/migrations/
+│   ├── routes/
+│   ├── resources/views/
+│   ├── public/js/
+│   └── config/
+├── guides/                  # Methodology guides
+│   └── 01-architecture-overview.md
+└── install.sh               # Installation script
+```
+
+---
+
+## Getting Started (Contributors)
 
 1. Read the guides in `guides/` to understand the methodology
 2. Examine `slotbooker/` as a reference implementation
 3. Review `examples/` to see good vs bad documentation outputs
-4. Apply the methodology to your own codebase
+4. Test prompts against slotbooker to validate changes
