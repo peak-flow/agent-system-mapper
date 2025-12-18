@@ -119,6 +119,22 @@ Your Architecture Overview MUST follow this structure:
 
 ## 6. Known Issues & Risks
 {Problems discovered during documentation - duplicated logic, missing error handling, etc.}
+
+## 7. Entry Points Summary
+{All ways into the system - routes, commands, listeners, webhooks}
+
+| Route/Entry | Method | Handler | Middleware | Verified |
+|-------------|--------|---------|------------|----------|
+
+## 8. Technology Stack Summary
+{Quick reference of key technologies by layer}
+
+| Layer | Technology |
+|-------|------------|
+| Backend Framework | {e.g., Laravel 10} |
+| Frontend Framework | {e.g., Livewire 2.12} |
+| Primary Database | {e.g., PostgreSQL} |
+| External Services | {e.g., Twilio, Stripe} |
 ```
 
 ---
