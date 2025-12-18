@@ -283,13 +283,30 @@ Items shown as dashed/missing because source doc marked them [NOT_FOUND]:
 
 ## Process
 
+### Step 0: Get System Classification from Source Doc
+
+The source document should contain a System Classification section.
+Extract the system type to generate appropriate diagrams.
+
+| System Type | Diagram Adjustments |
+|-------------|---------------------|
+| Framework backend | Show controllers, services, models |
+| CMS (WordPress) | Show hooks, templates, plugins |
+| Frontend SPA | Show components, state, API calls |
+| Plain PHP | Show files, includes, handlers |
+
+If no System Classification in source doc, infer from the components documented.
+
+---
+
 ### Step 1: Validate Input
 Confirm you have verified documentation:
 - Check for `## Metadata` section with commit hash
 - Check for `## Verification Summary`
 - Check for `[VERIFIED]` tags throughout
+- Check for `## System Classification` (recommended)
 
-If missing, STOP:
+If missing verification tags, STOP:
 ```
 Cannot generate diagrams. Input document lacks verification tags.
 Please provide output from Architecture Overview, Code Flows, or Data Models prompts.

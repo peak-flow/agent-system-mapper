@@ -179,25 +179,78 @@ A user could theoretically book the same slot twice. No database-level preventio
 
 ## Process
 
-### Step 1: Find All Migrations
+### Step 0: Identify Data Storage Pattern (Required)
 
+Before documenting models, identify how this system stores data.
+
+| System Type | Schema Defined In | Models/ORM |
+|-------------|-------------------|------------|
+| Laravel | `database/migrations/` | `app/Models/` (Eloquent) |
+| NestJS/Prisma | `prisma/schema.prisma` | Generated client |
+| NestJS/TypeORM | `*.entity.ts` files | Decorators in entity |
+| Django | `models.py` | Same file |
+| Rails | `db/migrate/` | `app/models/` |
+| WordPress | `wp_` tables, no migrations | `$wpdb` queries |
+| Plain PHP | `.sql` files or none | Direct queries |
+| Frontend-only | N/A | Skip this prompt |
+
+**Adapt your approach:**
+- If no migrations exist, look for SQL files or direct table creation
+- If no ORM, document raw query patterns instead
+- If frontend-only, this prompt may not apply
+
+---
+
+### Step 1: Find Schema Definitions
+
+**Laravel:**
 ```bash
 ls database/migrations/
-# or
-find . -path "*/migrations/*.php" -type f
 ```
 
-List all tables defined in migrations.
+**Prisma:**
+```bash
+cat prisma/schema.prisma
+```
 
-### Step 2: Find All Models
+**TypeORM/NestJS:**
+```bash
+find . -name "*.entity.ts" -type f
+```
 
+**WordPress:**
+```bash
+grep -rn "CREATE TABLE" wp-content/
+grep -rn "\$wpdb->prefix" wp-content/
+```
+
+**Plain PHP/No migrations:**
+```bash
+find . -name "*.sql" -type f
+grep -rn "CREATE TABLE" .
+```
+
+List all tables/entities defined.
+
+### Step 2: Find Models/Entities
+
+**Laravel:**
 ```bash
 ls app/Models/
-# or
-find . -name "*.php" -path "*/Models/*"
 ```
 
-Map migrations to their corresponding models.
+**NestJS:**
+```bash
+find . -name "*.entity.ts" -o -name "*.model.ts"
+```
+
+**Plain PHP:**
+```bash
+# Look for classes that interact with database
+grep -rn "class.*{" *.php | head -20
+```
+
+Map schema to corresponding models/entities.
 
 ### Step 3: Document Each Table
 

@@ -143,6 +143,25 @@ Output: Booking model instance with status='pending'
 
 ## Process
 
+### Step 0: Identify System Type (Required)
+
+Before tracing flows, understand what kind of system you're documenting.
+
+| System Type | Entry Points Look Like |
+|-------------|----------------------|
+| Laravel/Livewire | Routes, wire:click, controllers |
+| NestJS | @Controller, @Get/@Post decorators |
+| React/Next.js | Pages, components, API routes |
+| WordPress | Hooks (add_action), template files |
+| Plain PHP | Direct .php files, form actions |
+| Express/Node | app.get/post, router files |
+
+**Adapt your search patterns to the system type.**
+Do NOT search for Laravel patterns in a React app.
+Do NOT assume MVC structure in a plain PHP site.
+
+---
+
 ### Step 1: Define the Flow
 Ask yourself:
 - What triggers this flow? (button click, API call, scheduled job, event)
@@ -152,21 +171,42 @@ Write this down FIRST before tracing.
 
 ### Step 2: Find the Entry Point
 
-**For UI triggers:**
+**Adapt patterns to your system type:**
+
+**Laravel/Livewire:**
 ```bash
 grep -rn "wire:click" resources/views/
-grep -rn "@click" resources/views/
-grep -rn "onclick" resources/
-```
-
-**For API routes:**
-```bash
 grep -rn "Route::" routes/
 ```
 
-**For events:**
+**React/Next.js:**
 ```bash
-grep -rn "event(new" app/
+grep -rn "onClick" src/
+grep -rn "export default" pages/
+```
+
+**WordPress:**
+```bash
+grep -rn "add_action" wp-content/
+grep -rn "admin_post_" wp-content/
+```
+
+**Plain PHP:**
+```bash
+grep -rn "action=" *.php
+grep -rn "\$_POST\|\$_GET" *.php
+```
+
+**NestJS:**
+```bash
+grep -rn "@Get\|@Post" src/
+grep -rn "@Controller" src/
+```
+
+**For events (framework-specific):**
+```bash
+grep -rn "event(new" app/           # Laravel
+grep -rn "emit\|dispatch" src/      # React/Vue
 grep -rn "::dispatch(" app/
 ```
 

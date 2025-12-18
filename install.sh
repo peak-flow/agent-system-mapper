@@ -28,11 +28,40 @@ echo "Downloading examples..."
 curl -sL "${BASE_URL}/examples/good-architecture-overview.md" -o "${TARGET_DIR}/examples/good-architecture-overview.md"
 curl -sL "${BASE_URL}/examples/bad-architecture-overview.md" -o "${TARGET_DIR}/examples/bad-architecture-overview.md"
 
+# Create README
+cat > "${TARGET_DIR}/README.md" << 'README'
+# .pf-agent-system-mapper
+
+This directory contains agent-system-mapper prompts and examples.
+
+They are guidance artifacts only and have no runtime effect.
+
+**Safe to delete at any time.**
+
+## What's here
+
+- `prompts/` - AI agent prompts for documenting codebases
+- `examples/` - Good vs bad documentation examples
+
+## Usage
+
+Ask your AI agent:
+```
+Read .pf-agent-system-mapper/prompts/01-architecture-overview.md
+and document this codebase following that methodology.
+```
+
+## Source
+
+https://github.com/peak-flow/agent-system-mapper
+README
+
 echo ""
 echo "Installed to ${TARGET_DIR}/"
 echo ""
 echo "Structure:"
 echo "  ${TARGET_DIR}/"
+echo "  ├── README.md"
 echo "  ├── prompts/"
 echo "  │   ├── 01-architecture-overview.md"
 echo "  │   ├── 02-code-flows.md"
