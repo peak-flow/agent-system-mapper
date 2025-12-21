@@ -370,7 +370,7 @@ graph TB
 ## Metadata
 | Field | Value |
 |-------|-------|
-| Source Document | `../examples/good-architecture-overview.md` |
+| Source Document | `../examples/laravel/good-architecture.md` |
 | Source Commit | `e043013` |
 | Generated | `2025-01-15` |
 

@@ -389,5 +389,5 @@ Before submitting your documentation:
 
 For complete examples demonstrating this methodology:
 
-- **Good example:** `../examples/good-architecture-overview.md` - Shows proper citations, verification tags, and issue discovery
-- **Bad example:** `../examples/bad-architecture-overview.md` - Shows common hallucination patterns to avoid
+- **Good example:** `../examples/laravel/good-architecture.md` - Shows proper citations, verification tags, and issue discovery
+- **Bad example:** `../examples/laravel/bad-architecture.md` - Shows common hallucination patterns to avoid
