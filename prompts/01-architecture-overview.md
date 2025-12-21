@@ -385,9 +385,59 @@ Before submitting your documentation:
 
 ---
 
+## Framework Detection
+
+Before documenting, identify the framework/stack to load appropriate examples.
+
+### Detection Rules
+
+| Framework | Detection Pattern | Example Path |
+|-----------|------------------|--------------|
+| Laravel | `composer.json` with `laravel/framework`, `artisan` file | `examples/laravel/` |
+| FastAPI | `requirements.txt` with `fastapi`, `main.py` with `FastAPI(` | `examples/fastapi/` |
+| React | `package.json` with `react`, `src/` with `.jsx`/`.tsx` files | `examples/react/` |
+| Vue | `package.json` with `vue`, `.vue` files | `examples/vue/` |
+| Laravel Livewire | Laravel + `livewire/livewire` in `composer.json` | `examples/livewire/` |
+| Flask | `requirements.txt` with `flask`, `app.py` or `__init__.py` with `Flask(` | `examples/flask/` |
+
+### Detection Steps
+
+```bash
+# Check for Python frameworks
+cat requirements.txt 2>/dev/null | grep -E "fastapi|flask|django"
+
+# Check for PHP frameworks
+cat composer.json 2>/dev/null | grep -E "laravel|symfony"
+
+# Check for JavaScript frameworks
+cat package.json 2>/dev/null | grep -E "react|vue|angular|next|nuxt"
+
+# Check for Livewire (Laravel hybrid)
+cat composer.json 2>/dev/null | grep "livewire"
+```
+
+### Using Framework-Specific Examples
+
+Once you identify the framework:
+1. Read the good example from that framework's folder
+2. Read the bad example to understand common hallucination patterns for that framework
+3. Follow the patterns from the good example
+
+If no framework-specific example exists, use the Laravel examples as a baseline but adapt terminology.
+
+---
+
 ## Reference Examples
 
-For complete examples demonstrating this methodology:
+Framework-specific examples are located in `../examples/{framework}/`:
 
-- **Good example:** `../examples/good-architecture-overview.md` - Shows proper citations, verification tags, and issue discovery
-- **Bad example:** `../examples/bad-architecture-overview.md` - Shows common hallucination patterns to avoid
+| Framework | Good Example | Bad Example |
+|-----------|--------------|-------------|
+| Laravel | `../examples/laravel/good-architecture.md` | `../examples/laravel/bad-architecture.md` |
+| FastAPI | `../examples/fastapi/good-architecture.md` | `../examples/fastapi/bad-architecture.md` |
+| React | `../examples/react/good-architecture.md` | `../examples/react/bad-architecture.md` |
+| Vue | `../examples/vue/good-architecture.md` | `../examples/vue/bad-architecture.md` |
+| Livewire | `../examples/livewire/good-architecture.md` | `../examples/livewire/bad-architecture.md` |
+| Flask | `../examples/flask/good-architecture.md` | `../examples/flask/bad-architecture.md` |
+
+**Default (no framework match):** Use Laravel examples as baseline
