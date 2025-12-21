@@ -59,16 +59,38 @@ and document this codebase following that methodology.
 See examples in .pf-agent-system-mapper/examples/ for good vs bad output.
 ```
 
+The prompt will auto-detect your framework (Laravel, FastAPI, React, etc.) and reference the appropriate examples.
+
 ---
 
 ## Prompts Available
 
 | Prompt | Purpose |
 |--------|---------|
-| `01-architecture-overview.md` | System components & structure |
+| `01-architecture-overview.md` | System components & structure (with framework detection) |
 | `02-code-flows.md` | Execution path tracing |
 | `03-data-models.md` | Schema & relationships |
 | `04-diagrams.md` | Render verified docs as Mermaid |
+
+---
+
+## Framework-Specific Examples
+
+Each framework has its own mini reference app and good/bad documentation examples:
+
+| Framework | Mini App | Description |
+|-----------|----------|-------------|
+| Laravel | `examples/laravel/slotbooker/` | Booking system with MVC, events, services |
+| FastAPI | `examples/fastapi/tasktracker/` | Task management API with repositories, Pydantic |
+| React | `examples/react/` | *(coming soon)* |
+| Vue | `examples/vue/` | *(coming soon)* |
+| Livewire | `examples/livewire/` | *(coming soon)* |
+| Flask | `examples/flask/` | *(coming soon)* |
+
+Each framework folder contains:
+- A mini reference app demonstrating that framework's patterns
+- `good-architecture.md` - Properly verified documentation
+- `bad-architecture.md` - Common hallucination patterns to avoid
 
 ---
 
@@ -76,31 +98,27 @@ See examples in .pf-agent-system-mapper/examples/ for good vs bad output.
 
 ```
 agent-system-mapper/
-├── prompts/                 # AI agent prompts (what gets installed)
-│   ├── 01-architecture-overview.md
+├── prompts/                     # AI agent prompts (what gets installed)
+│   ├── 01-architecture-overview.md   # With framework detection
 │   ├── 02-code-flows.md
 │   ├── 03-data-models.md
 │   └── 04-diagrams.md
-├── examples/                # Good vs bad documentation examples
-│   ├── good-architecture-overview.md
-│   └── bad-architecture-overview.md
-├── slotbooker/              # Micro reference app (for development only)
-│   ├── app/
-│   │   ├── Models/
-│   │   ├── Contracts/
-│   │   ├── Services/
-│   │   ├── Http/Controllers/
-│   │   ├── Events/
-│   │   ├── Listeners/
-│   │   └── Providers/
-│   ├── database/migrations/
-│   ├── routes/
-│   ├── resources/views/
-│   ├── public/js/
-│   └── config/
-├── guides/                  # Methodology guides
+├── examples/                    # Framework-specific examples
+│   ├── laravel/
+│   │   ├── slotbooker/         # Laravel mini app
+│   │   ├── good-architecture.md
+│   │   └── bad-architecture.md
+│   ├── fastapi/
+│   │   ├── tasktracker/        # FastAPI mini app
+│   │   ├── good-architecture.md
+│   │   └── bad-architecture.md
+│   ├── react/                   # (coming soon)
+│   ├── vue/                     # (coming soon)
+│   ├── livewire/                # (coming soon)
+│   └── flask/                   # (coming soon)
+├── guides/                      # Methodology guides
 │   └── 01-architecture-overview.md
-└── install.sh               # Installation script
+└── install.sh                   # Installation script
 ```
 
 ---
@@ -108,6 +126,23 @@ agent-system-mapper/
 ## Getting Started (Contributors)
 
 1. Read the guides in `guides/` to understand the methodology
-2. Examine `slotbooker/` as a reference implementation
-3. Review `examples/` to see good vs bad documentation outputs
-4. Test prompts against slotbooker to validate changes
+2. Examine mini apps in `examples/{framework}/` as reference implementations
+3. Review good vs bad examples to understand hallucination patterns
+4. Test prompts against mini apps to validate changes
+
+---
+
+## Supported Frameworks
+
+The architecture prompt auto-detects frameworks using these patterns:
+
+| Framework | Detection |
+|-----------|-----------|
+| Laravel | `composer.json` with `laravel/framework` |
+| FastAPI | `requirements.txt` with `fastapi` |
+| React | `package.json` with `react` |
+| Vue | `package.json` with `vue` |
+| Livewire | Laravel + `livewire/livewire` in `composer.json` |
+| Flask | `requirements.txt` with `flask` |
+
+If your framework isn't supported yet, use Laravel examples as a baseline.
