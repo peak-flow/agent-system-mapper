@@ -382,3 +382,12 @@ Before submitting your documentation:
 - [ ] Verification summary counts are accurate
 - [ ] Known issues section includes problems found during documentation
 - [ ] Someone can checkout the commit and verify every claim
+
+---
+
+## Reference Examples
+
+For complete examples demonstrating this methodology:
+
+- **Good example:** `../examples/good-architecture-overview.md` - Shows proper citations, verification tags, and issue discovery
+- **Bad example:** `../examples/bad-architecture-overview.md` - Shows common hallucination patterns to avoid
