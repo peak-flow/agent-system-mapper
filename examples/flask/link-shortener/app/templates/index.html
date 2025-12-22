@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Shortener</title>
+    <!-- Wart: Inline styles instead of CSS file -->
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input[type="url"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #0056b3; }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.show { display: block; }
+        .short-url {
+            font-size: 18px;
+            color: #007bff;
+            word-break: break-all;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+        .stats {
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Link Shortener</h1>
+
+    <form id="shorten-form">
+        <div class="form-group">
+            <label for="url">URL to shorten</label>
+            <!-- Wart: No client-side validation beyond type="url" -->
+            <input type="url" id="url" name="url" placeholder="https://example.com/very/long/url" required>
+        </div>
+
+        <div class="form-group">
+            <label for="custom_code">Custom code (optional)</label>
+            <!-- Wart: No validation hints for custom code -->
+            <input type="text" id="custom_code" name="custom_code" placeholder="my-link">
+        </div>
+
+        <button type="submit">Shorten URL</button>
+    </form>
+
+    <div id="result" class="result">
+        <div>Your shortened URL:</div>
+        <a href="#" class="short-url" id="short-url" target="_blank"></a>
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <div id="error" class="error"></div>
+
+    <!-- Wart: Inline JavaScript instead of separate file -->
+    <script>
+        const form = document.getElementById('shorten-form');
+        const resultDiv = document.getElementById('result');
+        const shortUrlEl = document.getElementById('short-url');
+        const statsEl = document.getElementById('stats');
+        const errorEl = document.getElementById('error');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const url = document.getElementById('url').value;
+            const customCode = document.getElementById('custom_code').value;
+
+            // Reset UI
+            resultDiv.classList.remove('show');
+            errorEl.textContent = '';
+
+            try {
+                // Wart: No loading state shown
+                const response = await fetch('/api/links', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        url,
+                        custom_code: customCode || undefined
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create link');
+                }
+
+                // Show result
+                const shortUrl = window.location.origin + data.short_url;
+                shortUrlEl.href = shortUrl;
+                shortUrlEl.textContent = shortUrl;
+                statsEl.textContent = `Created: ${new Date(data.created_at).toLocaleString()}`;
+                resultDiv.classList.add('show');
+
+                // Wart: No copy-to-clipboard feature
+
+            } catch (err) {
+                errorEl.textContent = err.message;
+            }
+        });
+    </script>
+</body>
+</html>
