@@ -526,11 +526,11 @@ Framework-specific examples are located in `../examples/{framework}/`:
 
 | Framework | Good Example | Bad Example |
 |-----------|--------------|-------------|
-| Laravel | `../examples/laravel/good-architecture.md` | `../examples/laravel/bad-architecture.md` |
-| FastAPI | `../examples/fastapi/good-architecture.md` | `../examples/fastapi/bad-architecture.md` |
-| React | `../examples/react/good-architecture.md` | `../examples/react/bad-architecture.md` |
-| Vue | `../examples/vue/good-architecture.md` | `../examples/vue/bad-architecture.md` |
-| Livewire | `../examples/livewire/good-architecture.md` | `../examples/livewire/bad-architecture.md` |
-| Flask | `../examples/flask/good-architecture.md` | `../examples/flask/bad-architecture.md` |
+| Laravel | `../examples/laravel/good-architecture-doc-example.md` | `../examples/laravel/bad-architecture-doc-example.md` |
+| FastAPI | `../examples/fastapi/good-architecture-doc-example.md` | `../examples/fastapi/bad-architecture-doc-example.md` |
+| React | `../examples/react/good-architecture-doc-example.md` | `../examples/react/bad-architecture-doc-example.md` |
+| Vue | `../examples/vue/good-architecture-doc-example.md` | `../examples/vue/bad-architecture-doc-example.md` |
+| Livewire | `../examples/livewire/good-architecture-doc-example.md` | `../examples/livewire/bad-architecture-doc-example.md` |
+| Flask | `../examples/flask/good-architecture-doc-example.md` | `../examples/flask/bad-architecture-doc-example.md` |
 
 **Default (no framework match):** Use Laravel examples as baseline

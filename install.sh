@@ -33,28 +33,28 @@ curl -sL "${BASE_URL}/prompts/04-diagrams.md" -o "${TARGET_DIR}/prompts/04-diagr
 echo "Downloading examples..."
 
 # Laravel
-curl -sL "${BASE_URL}/examples/laravel/good-architecture.md" -o "${TARGET_DIR}/examples/laravel/good-architecture.md"
-curl -sL "${BASE_URL}/examples/laravel/bad-architecture.md" -o "${TARGET_DIR}/examples/laravel/bad-architecture.md"
+curl -sL "${BASE_URL}/examples/laravel/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/laravel/good-architecture-doc-example.md"
+curl -sL "${BASE_URL}/examples/laravel/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/laravel/bad-architecture-doc-example.md"
 
 # FastAPI
-curl -sL "${BASE_URL}/examples/fastapi/good-architecture.md" -o "${TARGET_DIR}/examples/fastapi/good-architecture.md"
-curl -sL "${BASE_URL}/examples/fastapi/bad-architecture.md" -o "${TARGET_DIR}/examples/fastapi/bad-architecture.md"
+curl -sL "${BASE_URL}/examples/fastapi/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/fastapi/good-architecture-doc-example.md"
+curl -sL "${BASE_URL}/examples/fastapi/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/fastapi/bad-architecture-doc-example.md"
 
 # Flask
-curl -sL "${BASE_URL}/examples/flask/good-architecture.md" -o "${TARGET_DIR}/examples/flask/good-architecture.md" 2>/dev/null || true
-curl -sL "${BASE_URL}/examples/flask/bad-architecture.md" -o "${TARGET_DIR}/examples/flask/bad-architecture.md" 2>/dev/null || true
+curl -sL "${BASE_URL}/examples/flask/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/flask/good-architecture-doc-example.md" 2>/dev/null || true
+curl -sL "${BASE_URL}/examples/flask/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/flask/bad-architecture-doc-example.md" 2>/dev/null || true
 
 # Livewire
-curl -sL "${BASE_URL}/examples/livewire/good-architecture.md" -o "${TARGET_DIR}/examples/livewire/good-architecture.md"
-curl -sL "${BASE_URL}/examples/livewire/bad-architecture.md" -o "${TARGET_DIR}/examples/livewire/bad-architecture.md"
+curl -sL "${BASE_URL}/examples/livewire/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/livewire/good-architecture-doc-example.md"
+curl -sL "${BASE_URL}/examples/livewire/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/livewire/bad-architecture-doc-example.md"
 
 # React
-curl -sL "${BASE_URL}/examples/react/good-architecture.md" -o "${TARGET_DIR}/examples/react/good-architecture.md"
-curl -sL "${BASE_URL}/examples/react/bad-architecture.md" -o "${TARGET_DIR}/examples/react/bad-architecture.md"
+curl -sL "${BASE_URL}/examples/react/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/react/good-architecture-doc-example.md"
+curl -sL "${BASE_URL}/examples/react/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/react/bad-architecture-doc-example.md"
 
 # Vue
-curl -sL "${BASE_URL}/examples/vue/good-architecture.md" -o "${TARGET_DIR}/examples/vue/good-architecture.md"
-curl -sL "${BASE_URL}/examples/vue/bad-architecture.md" -o "${TARGET_DIR}/examples/vue/bad-architecture.md"
+curl -sL "${BASE_URL}/examples/vue/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/vue/good-architecture-doc-example.md"
+curl -sL "${BASE_URL}/examples/vue/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/vue/bad-architecture-doc-example.md"
 
 # Create README
 cat > "${TARGET_DIR}/README.md" << 'README'
@@ -85,12 +85,12 @@ The prompt will auto-detect your framework and use the appropriate examples.
 
 | Framework | Good Example | Bad Example |
 |-----------|--------------|-------------|
-| Laravel | `examples/laravel/good-architecture.md` | `examples/laravel/bad-architecture.md` |
-| FastAPI | `examples/fastapi/good-architecture.md` | `examples/fastapi/bad-architecture.md` |
-| Flask | `examples/flask/good-architecture.md` | `examples/flask/bad-architecture.md` |
-| Livewire | `examples/livewire/good-architecture.md` | `examples/livewire/bad-architecture.md` |
-| React | `examples/react/good-architecture.md` | `examples/react/bad-architecture.md` |
-| Vue | `examples/vue/good-architecture.md` | `examples/vue/bad-architecture.md` |
+| Laravel | `examples/laravel/good-architecture-doc-example.md` | `examples/laravel/bad-architecture-doc-example.md` |
+| FastAPI | `examples/fastapi/good-architecture-doc-example.md` | `examples/fastapi/bad-architecture-doc-example.md` |
+| Flask | `examples/flask/good-architecture-doc-example.md` | `examples/flask/bad-architecture-doc-example.md` |
+| Livewire | `examples/livewire/good-architecture-doc-example.md` | `examples/livewire/bad-architecture-doc-example.md` |
+| React | `examples/react/good-architecture-doc-example.md` | `examples/react/bad-architecture-doc-example.md` |
+| Vue | `examples/vue/good-architecture-doc-example.md` | `examples/vue/bad-architecture-doc-example.md` |
 
 ## Source
 

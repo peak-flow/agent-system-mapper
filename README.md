@@ -89,8 +89,8 @@ Each framework has its own mini reference app and good/bad documentation example
 
 Each framework folder contains:
 - A mini reference app demonstrating that framework's patterns
-- `good-architecture.md` - Properly verified documentation
-- `bad-architecture.md` - Common hallucination patterns to avoid
+- `good-architecture-doc-example.md` - Properly verified documentation
+- `bad-architecture-doc-example.md` - Common hallucination patterns to avoid
 
 ---
 
@@ -106,12 +106,12 @@ agent-system-mapper/
 ├── examples/                    # Framework-specific examples
 │   ├── laravel/
 │   │   ├── slotbooker/         # Laravel mini app
-│   │   ├── good-architecture.md
-│   │   └── bad-architecture.md
+│   │   ├── good-architecture-doc-example.md
+│   │   └── bad-architecture-doc-example.md
 │   ├── fastapi/
 │   │   ├── tasktracker/        # FastAPI mini app
-│   │   ├── good-architecture.md
-│   │   └── bad-architecture.md
+│   │   ├── good-architecture-doc-example.md
+│   │   └── bad-architecture-doc-example.md
 │   ├── react/                   # (coming soon)
 │   ├── vue/                     # (coming soon)
 │   ├── livewire/                # (coming soon)
