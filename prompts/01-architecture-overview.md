@@ -193,24 +193,50 @@ If any check fails → **rewrite Section 3**.
 
 Before documenting anything, classify the system based on evidence.
 
-**Identify the system type:**
+#### Step 0a: Identify System Category
+
+First, determine the **primary category**:
+
+| Category | Indicators | Overlay |
+|----------|------------|---------|
+| **Model-Centric (ML/AI)** | `.safetensors`, `.pt`, `.onnx` files; `torch`, `tensorflow`, `transformers` in requirements; model configs; inference pipelines | Load `01a-overlay-model-systems.md` |
+| **Traditional Code** | Functions, classes, routes, CLI commands; behavior driven by code not weights | No overlay needed |
+
+**Model-Centric Detection Patterns:**
+```bash
+# Check for ML indicators
+ls *.safetensors *.pt *.onnx *.bin 2>/dev/null
+grep -l "torch\|tensorflow\|transformers\|diffusers" requirements.txt pyproject.toml 2>/dev/null
+find . -name "*.py" -exec grep -l "model.generate\|inference\|forward(" {} \; | head -5
+```
+
+If model-centric: **STOP and read `01a-overlay-model-systems.md`** before continuing.
+
+---
+
+#### Step 0b: Identify System Type (Traditional Code)
+
+For traditional code systems, further classify:
 
 | Type | Indicators |
 |------|------------|
+| Library/Package | Exports functions/classes for others to use; has `src/` or `lib/`; no routes |
 | Framework backend | `composer.json` with Laravel/Symfony, `package.json` with NestJS, `Gemfile` with Rails |
 | CMS | `wp-content/`, `wp-config.php` (WordPress), `sites/` (Drupal) |
 | Frontend SPA | `package.json` with React/Vue/Angular, `src/components/`, no server routes |
-| Static site | HTML files, maybe a build tool, no server-side code |
+| Build Tool | Config-driven transforms; plugins; dev server; bundling |
+| CLI Tool | Commands, arguments, options; no web interface |
 | Plain server-side | `.php`/`.js`/`.py` files serving pages directly, no framework structure |
-| Hybrid | Mix of above (document each part) |
 
 **Document your classification:**
 ```markdown
 ## System Classification
 | Field | Value |
 |-------|-------|
-| Type | {chosen type} |
+| Category | {Model-Centric OR Traditional Code} |
+| Type | {specific type from table} |
 | Evidence | {files/patterns that indicate this} |
+| Overlay Loaded | {Yes: filename OR No} |
 | Confidence | `[VERIFIED]` or `[INFERRED]` |
 ```
 
