@@ -68,7 +68,9 @@ The prompt will auto-detect your framework (Laravel, FastAPI, React, etc.) and r
 | Prompt | Purpose |
 |--------|---------|
 | `01-architecture-overview.md` | System components & structure (with framework detection) |
+| `01a-overlay-model-systems.md` | Additional detection for ML/AI model systems |
 | `02-code-flows.md` | Execution path tracing |
+| `02a-recommend-code-flows.md` | Analyze architecture and recommend which flows to document |
 | `03-data-models.md` | Schema & relationships |
 | `04-diagrams.md` | Render verified docs as Mermaid |
 
@@ -110,7 +112,9 @@ Package examples are in `examples/packages/{package}/` with the same good/bad do
 agent-system-mapper/
 ├── prompts/                     # AI agent prompts (what gets installed)
 │   ├── 01-architecture-overview.md   # With framework detection
+│   ├── 01a-overlay-model-systems.md  # ML/AI model detection overlay
 │   ├── 02-code-flows.md
+│   ├── 02a-recommend-code-flows.md   # Analyze & recommend flows
 │   ├── 03-data-models.md
 │   └── 04-diagrams.md
 ├── examples/                    # Framework-specific examples
