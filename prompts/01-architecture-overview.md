@@ -100,9 +100,57 @@ Your Architecture Overview MUST follow this structure:
 {Table showing major components, their locations, and responsibilities}
 {Every row must have verification tag}
 
-## 3. Key Data Flows
-{2-3 representative flows showing how data moves through system}
-{Each step must reference file:line}
+## 3. Execution Surfaces & High-Level Data Movement (Discovery Only)
+
+This section identifies **where execution enters the system** and **which major components participate**.
+
+### MUST NOT (Critical)
+- Trace step-by-step execution
+- Describe internal algorithms, loops, or conditionals
+- Quote more than 3 consecutive lines of code
+- Explain how processing, decoding, or transformation works internally
+
+Detailed execution paths belong in **02-code-flows.md**.
+
+---
+
+### 3.1 Primary Execution Surfaces
+
+| Entry Surface | Type | Primary Components Involved | Evidence |
+|--------------|------|-----------------------------|----------|
+| {entry point} | {API/CLI/Web/Event} | {list components} | [VERIFIED: file] |
+
+### 3.2 High-Level Data Movement (Non-Procedural)
+
+Describe **what moves**, not **how it moves**.
+
+| Stage | Input Type | Output Type | Participating Components |
+|------|------------|-------------|--------------------------|
+| {stage name} | {input} | {output} | {components} |
+
+No assumptions about algorithms, control flow, or performance.
+
+### 3.3 Pointers to Code Flow Documentation
+
+The following operations are candidates for **detailed flow tracing** (see 02-code-flows.md):
+
+- {Operation 1}
+- {Operation 2}
+- {Operation 3}
+
+### Section 3 Self-Check (Before Submitting)
+
+Before emitting Section 3, verify:
+- [ ] No method bodies longer than 3 lines are quoted
+- [ ] No loops (`for`, `while`) are described
+- [ ] No conditionals (`if`, `else`) are explained
+- [ ] No algorithm names are explained (sampling, caching, etc.)
+- [ ] All movements are described as **conceptual stages**, not steps
+- [ ] At least one sentence explicitly defers to `02-code-flows.md`
+
+If any check fails → **rewrite Section 3**.
+
+---
 
 ## 3b. Frontend → Backend Interaction Map (If Applicable)
 {For systems with frontend-triggered backend execution}
@@ -276,12 +324,16 @@ Guidelines:
 
 ---
 
-### Step 5: Trace Key Flows
-Pick 2-3 important operations. For each:
-1. Start at entry point
-2. Read the method
-3. Follow calls to other files
-4. Document each step with file:line
+### Step 5: Identify Key Operations (For 02-code-flows)
+
+List 2-4 important operations that should be traced in detail later.
+
+**Do NOT trace them here.** Just identify:
+- Operation name (e.g., "User Registration", "Payment Processing")
+- Entry point file
+- Why it's important
+
+These become inputs for 02-code-flows.md documentation.
 
 ### Step 6: Find External Dependencies
 ```bash
@@ -313,6 +365,14 @@ The system uses these services:
 2. Controller validates input
 3. Service processes request
 4. Notification sent to user
+
+## Execution Flow
+        ↓
+Form submission triggers validation
+        ↓
+Service layer processes payment via PaymentGateway.charge()
+        ↓
+Notification queue dispatches email
 ```
 
 **Why this is BAD:**
@@ -321,6 +381,7 @@ The system uses these services:
 - Claims services exist without proof
 - Reader cannot verify anything
 - May be completely hallucinated
+- **Traces execution steps** (belongs in 02-code-flows)
 
 ---
 
@@ -339,33 +400,38 @@ The system uses these services:
 [NOT_FOUND: searched "BookingService", "NotificationService" in app/]
 No dedicated BookingService or NotificationService. Booking logic is in controller.
 
-## Data Flow: Create Booking
+## 3. Execution Surfaces & High-Level Data Movement
 
-[VERIFIED: routes/web.php:20]
-```
-Route::post('/booking', [BookingController::class, 'store']);
-```
-        ↓
-[VERIFIED: BookingController.php:38-52]
-```php
-public function store(Request $request)
-{
-    $slot = TimeSlot::findOrFail($request->input('time_slot_id'));
-    // ... creates booking, fires event
-}
-```
-        ↓
-[VERIFIED: app/Events/BookingCreated.php]
-Event fired with booking instance
-        ↓
+### 3.1 Primary Execution Surfaces
+
+| Entry Surface | Type | Primary Components Involved | Evidence |
+|--------------|------|-----------------------------|----------|
+| `POST /booking` | Web Route | BookingController, TimeSlot, BookingCreated event | [VERIFIED: routes/web.php:20] |
+| `php artisan bookings:remind` | CLI Command | ReminderCommand, BookingRepository | [VERIFIED: app/Console/Commands/] |
+
+### 3.2 High-Level Data Movement
+
+| Stage | Input | Output | Components |
+|-------|-------|--------|------------|
+| Request handling | HTTP POST | Validated data | BookingController |
+| Persistence | Validated data | Booking record | TimeSlot model |
+| Event dispatch | Booking record | Event payload | BookingCreated |
+
+### 3.3 Pointers to Code Flow Documentation
+
+- **Create Booking flow** - see 02-code-flows.md
+- **Reminder dispatch flow** - see 02-code-flows.md
+
 [NOT_FOUND: searched "mail", "email", "notify" in app/]
-No email notification in this flow.
+No email notification found. May be handled by event listener.
 ```
 
 **Why this is GOOD:**
 - Every claim has verification tag
-- Actual code quoted
+- **Tables instead of step-by-step arrows**
+- Describes WHAT moves, not HOW
 - NOT_FOUND explicitly states what doesn't exist
+- **Defers detailed tracing to 02-code-flows.md**
 - Reader can checkout commit and verify
 
 ---
@@ -382,6 +448,7 @@ Before submitting your documentation:
 - [ ] Verification summary counts are accurate
 - [ ] Known issues section includes problems found during documentation
 - [ ] Someone can checkout the commit and verify every claim
+- [ ] **Section 3 uses tables, not step-by-step arrows** (detailed tracing → 02-code-flows)
 
 ---
 
