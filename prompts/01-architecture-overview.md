@@ -534,3 +534,11 @@ Framework-specific examples are located in `../examples/{framework}/`:
 | Flask | `../examples/flask/good-architecture-doc-example.md` | `../examples/flask/bad-architecture-doc-example.md` |
 
 **Default (no framework match):** Use Laravel examples as baseline
+
+Package/library examples are in `../examples/packages/{package}/`:
+
+| Package | Good Example | Bad Example |
+|---------|--------------|-------------|
+| Requests (Python) | `../examples/packages/requests/good-architecture-doc-example.md` | `../examples/packages/requests/bad-architecture-doc-example.md` |
+
+**For libraries/packages:** Use Requests examples as baseline

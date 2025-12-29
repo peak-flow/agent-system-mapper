@@ -92,6 +92,16 @@ Each framework folder contains:
 - `good-architecture-doc-example.md` - Properly verified documentation
 - `bad-architecture-doc-example.md` - Common hallucination patterns to avoid
 
+### Package/Library Examples
+
+For documenting standalone libraries (not web frameworks):
+
+| Package | Language | Description |
+|---------|----------|-------------|
+| Requests | Python | HTTP client library |
+
+Package examples are in `examples/packages/{package}/` with the same good/bad doc structure.
+
 ---
 
 ## Repository Structure
@@ -115,7 +125,9 @@ agent-system-mapper/
 │   ├── react/                   # (coming soon)
 │   ├── vue/                     # (coming soon)
 │   ├── livewire/                # (coming soon)
-│   └── flask/                   # (coming soon)
+│   ├── flask/                   # (coming soon)
+│   └── packages/                # Library/package examples
+│       └── requests/            # Python HTTP client
 ├── guides/                      # Methodology guides
 │   └── 01-architecture-overview.md
 └── install.sh                   # Installation script

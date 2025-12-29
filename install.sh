@@ -20,6 +20,7 @@ mkdir -p "${TARGET_DIR}/examples/flask"
 mkdir -p "${TARGET_DIR}/examples/livewire"
 mkdir -p "${TARGET_DIR}/examples/react"
 mkdir -p "${TARGET_DIR}/examples/vue"
+mkdir -p "${TARGET_DIR}/examples/packages/requests"
 
 # Download prompts
 echo "Downloading prompts..."
@@ -55,6 +56,13 @@ curl -sL "${BASE_URL}/examples/react/bad-architecture-doc-example.md" -o "${TARG
 # Vue
 curl -sL "${BASE_URL}/examples/vue/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/vue/good-architecture-doc-example.md"
 curl -sL "${BASE_URL}/examples/vue/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/vue/bad-architecture-doc-example.md"
+
+# Package examples
+echo "Downloading package examples..."
+
+# Requests (Python HTTP client)
+curl -sL "${BASE_URL}/examples/packages/requests/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/packages/requests/good-architecture-doc-example.md"
+curl -sL "${BASE_URL}/examples/packages/requests/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/packages/requests/bad-architecture-doc-example.md"
 
 # Create README
 cat > "${TARGET_DIR}/README.md" << 'README'
@@ -92,6 +100,12 @@ The prompt will auto-detect your framework and use the appropriate examples.
 | React | `examples/react/good-architecture-doc-example.md` | `examples/react/bad-architecture-doc-example.md` |
 | Vue | `examples/vue/good-architecture-doc-example.md` | `examples/vue/bad-architecture-doc-example.md` |
 
+## Package Examples
+
+| Package | Good Example | Bad Example |
+|---------|--------------|-------------|
+| Requests | `examples/packages/requests/good-architecture-doc-example.md` | `examples/packages/requests/bad-architecture-doc-example.md` |
+
 ## Source
 
 https://github.com/peak-flow/agent-system-mapper
@@ -115,7 +129,9 @@ echo "      ├── fastapi/"
 echo "      ├── flask/"
 echo "      ├── livewire/"
 echo "      ├── react/"
-echo "      └── vue/"
+echo "      ├── vue/"
+echo "      └── packages/"
+echo "          └── requests/"
 echo ""
 echo "Usage:"
 echo "  Ask your AI agent to read .pf-agent-system-mapper/prompts/01-architecture-overview.md"
