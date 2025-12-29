@@ -247,6 +247,42 @@ For traditional code systems, further classify:
 
 ---
 
+#### Step 0c: Read Relevant Example (MANDATORY)
+
+Before writing ANY documentation, you MUST read the appropriate example file to understand the expected format.
+
+**Select and read the example based on your classification:**
+
+| System Type | Example to Read |
+|-------------|-----------------|
+| Library/Package | `../examples/packages/requests/good-architecture-doc-example.md` |
+| Laravel | `../examples/laravel/good-architecture-doc-example.md` |
+| FastAPI | `../examples/fastapi/good-architecture-doc-example.md` |
+| React | `../examples/react/good-architecture-doc-example.md` |
+| Vue | `../examples/vue/good-architecture-doc-example.md` |
+| Livewire | `../examples/livewire/good-architecture-doc-example.md` |
+| Flask | `../examples/flask/good-architecture-doc-example.md` |
+| Other/Unknown | Use `../examples/packages/requests/good-architecture-doc-example.md` as default |
+
+**After reading the example, confirm:**
+```markdown
+## Example Reference
+| Field | Value |
+|-------|-------|
+| Example Read | {path to example file} |
+| Key Format Elements Noted | {e.g., "Section 3 uses tables not arrows", "Boundaries section required"} |
+```
+
+**Why this matters:**
+- The example shows the EXACT format expected
+- It demonstrates proper verification tag usage
+- It shows what sections are required (e.g., "Boundaries & Non-Responsibilities" for packages)
+- Skipping this step leads to incorrect formatting
+
+**DO NOT proceed to Step 1 until you have read the example.**
+
+---
+
 ### Step 1: Gather Metadata
 ```bash
 git rev-parse --short HEAD  # Get commit hash
@@ -522,6 +558,8 @@ If no framework-specific example exists, use the Laravel examples as a baseline 
 
 ## Reference Examples
 
+**REMINDER: You MUST read the relevant example in Step 0c before writing documentation.**
+
 Framework-specific examples are located in `../examples/{framework}/`:
 
 | Framework | Good Example | Bad Example |
@@ -533,12 +571,15 @@ Framework-specific examples are located in `../examples/{framework}/`:
 | Livewire | `../examples/livewire/good-architecture-doc-example.md` | `../examples/livewire/bad-architecture-doc-example.md` |
 | Flask | `../examples/flask/good-architecture-doc-example.md` | `../examples/flask/bad-architecture-doc-example.md` |
 
-**Default (no framework match):** Use Laravel examples as baseline
-
 Package/library examples are in `../examples/packages/{package}/`:
 
 | Package | Good Example | Bad Example |
 |---------|--------------|-------------|
 | Requests (Python) | `../examples/packages/requests/good-architecture-doc-example.md` | `../examples/packages/requests/bad-architecture-doc-example.md` |
 
-**For libraries/packages:** Use Requests examples as baseline
+**Selection rules:**
+- Libraries/Packages → Use Requests example
+- Web frameworks → Use matching framework example
+- Unknown/Other → Use Requests example (most generic)
+
+**Also read the BAD example** to understand what mistakes to avoid (hallucinated features, step-by-step tracing, missing verification tags).
