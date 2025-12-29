@@ -210,8 +210,8 @@ These become the "Known Issues" section.
 ## Examples
 
 See the `examples/` folder for:
-- **[BAD Example](../examples/bad-architecture-overview.md)** - Vague, no citations, assumes behavior
-- **[GOOD Example](../examples/good-architecture-overview.md)** - Verified, cited, shows actual code
+- **[BAD Example](../examples/laravel/bad-architecture-doc-example.md)** - Vague, no citations, assumes behavior
+- **[GOOD Example](../examples/laravel/good-architecture-doc-example.md)** - Verified, cited, shows actual code
 
 Both document the same codebase (`slotbooker/`) so you can directly compare.
 

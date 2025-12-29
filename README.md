@@ -89,8 +89,18 @@ Each framework has its own mini reference app and good/bad documentation example
 
 Each framework folder contains:
 - A mini reference app demonstrating that framework's patterns
-- `good-architecture.md` - Properly verified documentation
-- `bad-architecture.md` - Common hallucination patterns to avoid
+- `good-architecture-doc-example.md` - Properly verified documentation
+- `bad-architecture-doc-example.md` - Common hallucination patterns to avoid
+
+### Package/Library Examples
+
+For documenting standalone libraries (not web frameworks):
+
+| Package | Language | Description |
+|---------|----------|-------------|
+| Requests | Python | HTTP client library |
+
+Package examples are in `examples/packages/{package}/` with the same good/bad doc structure.
 
 ---
 
@@ -106,16 +116,18 @@ agent-system-mapper/
 ├── examples/                    # Framework-specific examples
 │   ├── laravel/
 │   │   ├── slotbooker/         # Laravel mini app
-│   │   ├── good-architecture.md
-│   │   └── bad-architecture.md
+│   │   ├── good-architecture-doc-example.md
+│   │   └── bad-architecture-doc-example.md
 │   ├── fastapi/
 │   │   ├── tasktracker/        # FastAPI mini app
-│   │   ├── good-architecture.md
-│   │   └── bad-architecture.md
+│   │   ├── good-architecture-doc-example.md
+│   │   └── bad-architecture-doc-example.md
 │   ├── react/                   # (coming soon)
 │   ├── vue/                     # (coming soon)
 │   ├── livewire/                # (coming soon)
-│   └── flask/                   # (coming soon)
+│   ├── flask/                   # (coming soon)
+│   └── packages/                # Library/package examples
+│       └── requests/            # Python HTTP client
 ├── guides/                      # Methodology guides
 │   └── 01-architecture-overview.md
 └── install.sh                   # Installation script
