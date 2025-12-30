@@ -20,6 +20,19 @@ It is NOT:
 
 ---
 
+## Scope Rule
+
+**This document prioritizes high-impact, flow-defining behaviors.**
+
+Do NOT enumerate trivial invariants (e.g., "method returns value", "array is not empty") unless they affect:
+- **Correctness** — system produces wrong results if violated
+- **Safety** — security or data integrity at risk
+- **External behavior** — users or downstream systems are impacted
+
+Prefer fewer, higher-value test candidates over exhaustive coverage.
+
+---
+
 ## Prerequisites
 
 Before using this prompt, you MUST have:
@@ -195,7 +208,9 @@ Based on the flow, identify where and how the flow could fail:
 
 ## Step 4: Propose Test Candidates
 
-For each invariant and failure mode, propose a test candidate:
+For each invariant and failure mode, propose a test candidate.
+
+**Quality over quantity:** Prefer 5-10 high-value test candidates over 30 trivial ones. Each candidate should test something that matters — if it fails, would anyone care?
 
 ### Test Candidate Format
 
