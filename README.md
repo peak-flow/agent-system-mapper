@@ -73,6 +73,7 @@ The prompt will auto-detect your framework (Laravel, FastAPI, React, etc.) and r
 | `02a-recommend-code-flows.md` | Analyze architecture and recommend which flows to document |
 | `03-data-models.md` | Schema & relationships |
 | `04-diagrams.md` | Render verified docs as Mermaid |
+| `05-test-surface.md` | Derive test candidates from verified code flows |
 
 ---
 
@@ -116,12 +117,15 @@ agent-system-mapper/
 │   ├── 02-code-flows.md
 │   ├── 02a-recommend-code-flows.md   # Analyze & recommend flows
 │   ├── 03-data-models.md
-│   └── 04-diagrams.md
+│   ├── 04-diagrams.md
+│   └── 05-test-surface.md            # Test candidates from flows
 ├── examples/                    # Framework-specific examples
 │   ├── laravel/
 │   │   ├── slotbooker/         # Laravel mini app
 │   │   ├── good-architecture-doc-example.md
-│   │   └── bad-architecture-doc-example.md
+│   │   ├── bad-architecture-doc-example.md
+│   │   ├── good-test-surface-example.md
+│   │   └── bad-test-surface-example.md
 │   ├── fastapi/
 │   │   ├── tasktracker/        # FastAPI mini app
 │   │   ├── good-architecture-doc-example.md
