@@ -21,6 +21,7 @@ mkdir -p "${TARGET_DIR}/examples/livewire"
 mkdir -p "${TARGET_DIR}/examples/react"
 mkdir -p "${TARGET_DIR}/examples/vue"
 mkdir -p "${TARGET_DIR}/examples/packages/requests"
+mkdir -p "${TARGET_DIR}/examples/test-surface"
 
 # Download prompts
 echo "Downloading prompts..."
@@ -38,8 +39,6 @@ echo "Downloading examples..."
 # Laravel
 curl -sL "${BASE_URL}/examples/laravel/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/laravel/good-architecture-doc-example.md"
 curl -sL "${BASE_URL}/examples/laravel/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/laravel/bad-architecture-doc-example.md"
-curl -sL "${BASE_URL}/examples/laravel/good-test-surface-example.md" -o "${TARGET_DIR}/examples/laravel/good-test-surface-example.md"
-curl -sL "${BASE_URL}/examples/laravel/bad-test-surface-example.md" -o "${TARGET_DIR}/examples/laravel/bad-test-surface-example.md"
 
 # FastAPI
 curl -sL "${BASE_URL}/examples/fastapi/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/fastapi/good-architecture-doc-example.md"
@@ -67,6 +66,11 @@ echo "Downloading package examples..."
 # Requests (Python HTTP client)
 curl -sL "${BASE_URL}/examples/packages/requests/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/packages/requests/good-architecture-doc-example.md"
 curl -sL "${BASE_URL}/examples/packages/requests/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/packages/requests/bad-architecture-doc-example.md"
+
+# Test surface examples (framework-agnostic)
+echo "Downloading test surface examples..."
+curl -sL "${BASE_URL}/examples/test-surface/good-test-surface-example.md" -o "${TARGET_DIR}/examples/test-surface/good-test-surface-example.md"
+curl -sL "${BASE_URL}/examples/test-surface/bad-test-surface-example.md" -o "${TARGET_DIR}/examples/test-surface/bad-test-surface-example.md"
 
 # Create README
 cat > "${TARGET_DIR}/README.md" << 'README'
@@ -136,8 +140,9 @@ echo "      ├── flask/"
 echo "      ├── livewire/"
 echo "      ├── react/"
 echo "      ├── vue/"
-echo "      └── packages/"
-echo "          └── requests/"
+echo "      ├── packages/"
+echo "      │   └── requests/"
+echo "      └── test-surface/"
 echo ""
 echo "Usage:"
 echo "  Ask your AI agent to read .pf-agent-system-mapper/prompts/01-architecture-overview.md"

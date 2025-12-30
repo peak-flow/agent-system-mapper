@@ -123,9 +123,7 @@ agent-system-mapper/
 │   ├── laravel/
 │   │   ├── slotbooker/         # Laravel mini app
 │   │   ├── good-architecture-doc-example.md
-│   │   ├── bad-architecture-doc-example.md
-│   │   ├── good-test-surface-example.md
-│   │   └── bad-test-surface-example.md
+│   │   └── bad-architecture-doc-example.md
 │   ├── fastapi/
 │   │   ├── tasktracker/        # FastAPI mini app
 │   │   ├── good-architecture-doc-example.md
@@ -134,8 +132,11 @@ agent-system-mapper/
 │   ├── vue/                     # (coming soon)
 │   ├── livewire/                # (coming soon)
 │   ├── flask/                   # (coming soon)
-│   └── packages/                # Library/package examples
-│       └── requests/            # Python HTTP client
+│   ├── packages/                # Library/package examples
+│   │   └── requests/            # Python HTTP client
+│   └── test-surface/            # Test surface examples (framework-agnostic)
+│       ├── good-test-surface-example.md
+│       └── bad-test-surface-example.md
 ├── guides/                      # Methodology guides
 │   └── 01-architecture-overview.md
 └── install.sh                   # Installation script
