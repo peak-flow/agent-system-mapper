@@ -21,6 +21,7 @@ mkdir -p "${TARGET_DIR}/examples/livewire"
 mkdir -p "${TARGET_DIR}/examples/react"
 mkdir -p "${TARGET_DIR}/examples/vue"
 mkdir -p "${TARGET_DIR}/examples/packages/requests"
+mkdir -p "${TARGET_DIR}/examples/test-surface"
 
 # Download prompts
 echo "Downloading prompts..."
@@ -30,6 +31,7 @@ curl -sL "${BASE_URL}/prompts/02-code-flows.md" -o "${TARGET_DIR}/prompts/02-cod
 curl -sL "${BASE_URL}/prompts/02a-recommend-code-flows.md" -o "${TARGET_DIR}/prompts/02a-recommend-code-flows.md"
 curl -sL "${BASE_URL}/prompts/03-data-models.md" -o "${TARGET_DIR}/prompts/03-data-models.md"
 curl -sL "${BASE_URL}/prompts/04-diagrams.md" -o "${TARGET_DIR}/prompts/04-diagrams.md"
+curl -sL "${BASE_URL}/prompts/05-test-surface.md" -o "${TARGET_DIR}/prompts/05-test-surface.md"
 
 # Download framework-specific examples
 echo "Downloading examples..."
@@ -64,6 +66,11 @@ echo "Downloading package examples..."
 # Requests (Python HTTP client)
 curl -sL "${BASE_URL}/examples/packages/requests/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/packages/requests/good-architecture-doc-example.md"
 curl -sL "${BASE_URL}/examples/packages/requests/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/packages/requests/bad-architecture-doc-example.md"
+
+# Test surface examples (framework-agnostic)
+echo "Downloading test surface examples..."
+curl -sL "${BASE_URL}/examples/test-surface/good-test-surface-example.md" -o "${TARGET_DIR}/examples/test-surface/good-test-surface-example.md"
+curl -sL "${BASE_URL}/examples/test-surface/bad-test-surface-example.md" -o "${TARGET_DIR}/examples/test-surface/bad-test-surface-example.md"
 
 # Create README
 cat > "${TARGET_DIR}/README.md" << 'README'
@@ -124,7 +131,8 @@ echo "  │   ├── 01a-overlay-model-systems.md"
 echo "  │   ├── 02-code-flows.md"
 echo "  │   ├── 02a-recommend-code-flows.md"
 echo "  │   ├── 03-data-models.md"
-echo "  │   └── 04-diagrams.md"
+echo "  │   ├── 04-diagrams.md"
+echo "  │   └── 05-test-surface.md"
 echo "  └── examples/"
 echo "      ├── laravel/"
 echo "      ├── fastapi/"
@@ -132,8 +140,9 @@ echo "      ├── flask/"
 echo "      ├── livewire/"
 echo "      ├── react/"
 echo "      ├── vue/"
-echo "      └── packages/"
-echo "          └── requests/"
+echo "      ├── packages/"
+echo "      │   └── requests/"
+echo "      └── test-surface/"
 echo ""
 echo "Usage:"
 echo "  Ask your AI agent to read .pf-agent-system-mapper/prompts/01-architecture-overview.md"
