@@ -34,7 +34,7 @@ These prompts use **LSP (Language Server Protocol) operations** instead of grep/
 Ask Claude Code to use the LSP versions:
 
 ```
-Read .pf-agent-system-mapper/prompts-lsp/01-architecture-overview.md
+Read .pf-agent-system-mapper/prompts/lsp/01-architecture-overview.md
 and document this codebase following that methodology.
 ```
 

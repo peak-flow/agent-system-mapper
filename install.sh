@@ -14,6 +14,7 @@ echo "Installing Agent System Mapper prompts..."
 
 # Create directories
 mkdir -p "${TARGET_DIR}/prompts"
+mkdir -p "${TARGET_DIR}/prompts/lsp"
 mkdir -p "${TARGET_DIR}/examples/laravel"
 mkdir -p "${TARGET_DIR}/examples/fastapi"
 mkdir -p "${TARGET_DIR}/examples/flask"
@@ -23,8 +24,8 @@ mkdir -p "${TARGET_DIR}/examples/vue"
 mkdir -p "${TARGET_DIR}/examples/packages/requests"
 mkdir -p "${TARGET_DIR}/examples/test-surface"
 
-# Download prompts
-echo "Downloading prompts..."
+# Download standard prompts
+echo "Downloading standard prompts..."
 curl -sL "${BASE_URL}/prompts/01-architecture-overview.md" -o "${TARGET_DIR}/prompts/01-architecture-overview.md"
 curl -sL "${BASE_URL}/prompts/01a-overlay-model-systems.md" -o "${TARGET_DIR}/prompts/01a-overlay-model-systems.md"
 curl -sL "${BASE_URL}/prompts/02-code-flows.md" -o "${TARGET_DIR}/prompts/02-code-flows.md"
@@ -32,6 +33,13 @@ curl -sL "${BASE_URL}/prompts/02a-recommend-code-flows.md" -o "${TARGET_DIR}/pro
 curl -sL "${BASE_URL}/prompts/03-data-models.md" -o "${TARGET_DIR}/prompts/03-data-models.md"
 curl -sL "${BASE_URL}/prompts/04-diagrams.md" -o "${TARGET_DIR}/prompts/04-diagrams.md"
 curl -sL "${BASE_URL}/prompts/05-test-surface.md" -o "${TARGET_DIR}/prompts/05-test-surface.md"
+
+# Download LSP-optimized prompts
+echo "Downloading LSP-optimized prompts..."
+curl -sL "${BASE_URL}/prompts/lsp/01-architecture-overview.md" -o "${TARGET_DIR}/prompts/lsp/01-architecture-overview.md"
+curl -sL "${BASE_URL}/prompts/lsp/02-code-flows.md" -o "${TARGET_DIR}/prompts/lsp/02-code-flows.md"
+curl -sL "${BASE_URL}/prompts/lsp/02a-recommend-code-flows.md" -o "${TARGET_DIR}/prompts/lsp/02a-recommend-code-flows.md"
+curl -sL "${BASE_URL}/prompts/lsp/README.md" -o "${TARGET_DIR}/prompts/lsp/README.md"
 
 # Download framework-specific examples
 echo "Downloading examples..."
@@ -84,18 +92,32 @@ They are guidance artifacts only and have no runtime effect.
 
 ## What's here
 
-- `prompts/` - AI agent prompts for documenting codebases
+- `prompts/` - Standard AI agent prompts (grep/file-based)
+- `prompts/lsp/` - LSP-optimized prompts (~50% fewer tokens)
 - `examples/` - Framework-specific good vs bad documentation examples
 
 ## Usage
 
-Ask your AI agent:
+### Standard Prompts (grep-based)
 ```
 Read .pf-agent-system-mapper/prompts/01-architecture-overview.md
 and document this codebase following that methodology.
 ```
 
+### LSP Prompts (recommended if LSP available)
+```
+Read .pf-agent-system-mapper/prompts/lsp/01-architecture-overview.md
+and document this codebase following that methodology.
+```
+
 The prompt will auto-detect your framework and use the appropriate examples.
+
+## Prompt Versions
+
+| Type | Token Usage | Best For |
+|------|-------------|----------|
+| **Standard** (`prompts/`) | 15-26k tokens | No LSP server, dynamic code |
+| **LSP** (`prompts/lsp/`) | 7-12k tokens | LSP available, hitting session limits |
 
 ## Framework Examples
 
@@ -132,7 +154,12 @@ echo "  │   ├── 02-code-flows.md"
 echo "  │   ├── 02a-recommend-code-flows.md"
 echo "  │   ├── 03-data-models.md"
 echo "  │   ├── 04-diagrams.md"
-echo "  │   └── 05-test-surface.md"
+echo "  │   ├── 05-test-surface.md"
+echo "  │   └── lsp/"
+echo "  │       ├── README.md"
+echo "  │       ├── 01-architecture-overview.md (LSP-optimized)"
+echo "  │       ├── 02-code-flows.md (LSP-optimized)"
+echo "  │       └── 02a-recommend-code-flows.md (LSP-optimized)"
 echo "  └── examples/"
 echo "      ├── laravel/"
 echo "      ├── fastapi/"
@@ -145,6 +172,6 @@ echo "      │   └── requests/"
 echo "      └── test-surface/"
 echo ""
 echo "Usage:"
-echo "  Ask your AI agent to read .pf-agent-system-mapper/prompts/01-architecture-overview.md"
-echo "  and document your codebase following that methodology."
+echo "  Standard prompts: Ask your AI to read .pf-agent-system-mapper/prompts/01-architecture-overview.md"
+echo "  LSP prompts (50% fewer tokens): Ask your AI to read .pf-agent-system-mapper/prompts/lsp/01-architecture-overview.md"
 echo ""
