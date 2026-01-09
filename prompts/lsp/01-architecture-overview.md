@@ -8,19 +8,29 @@ You are a documentation agent. Your task is to create a verified Architecture Ov
 
 This prompt uses LSP operations instead of grep/find commands. Ensure LSP is available for the target language.
 
-### Available LSP Operations
+### LSP Operations for Architecture (Discovery Only)
 
-| Operation | Purpose | When to Use |
-|-----------|---------|-------------|
+| Operation | Purpose | Use In Architecture For |
+|-----------|---------|-------------------------|
 | `workspaceSymbol("pattern")` | Find symbols by name | Locating Controllers, Services, Models |
-| `documentSymbol(file)` | List all symbols in file | Understanding file structure |
-| `goToDefinition(file, line, char)` | Jump to symbol definition | Following imports/references |
-| `findReferences(file, line, char)` | Find all usages of symbol | Tracing where something is used |
+| `documentSymbol(file)` | List all symbols in file | Getting method/property inventory |
 | `hover(file, line, char)` | Get type/doc info | Quick signature lookup |
+
+### LSP Operations NOT for Architecture
+
+| Operation | Why Not Here | Use Instead In |
+|-----------|--------------|----------------|
+| `goToDefinition` | Traces execution paths | 02-code-flows.md |
+| `outgoingCalls` | Traces what methods call | 02-code-flows.md |
+| `incomingCalls` | Traces what calls a method | 02-code-flows.md |
+| `findReferences` | Can trace execution | Use sparingly - see below |
+
+**`findReferences` guidance:** Only use to answer "does X exist?" or "is X used at all?"
+Do NOT use to trace HOW X is called or build call chains. That belongs in 02-code-flows.md.
 
 ### LSP Advantages
 - **50% fewer tokens** vs grep/file reading
-- **Precise navigation** - jumps directly to definitions
+- **Precise discovery** - finds what exists without reading files
 - **Structured results** - symbols with types, not raw text
 
 ---
@@ -112,16 +122,38 @@ Your Architecture Overview MUST follow this structure:
 
 ## 3. Execution Surfaces & High-Level Data Movement (Discovery Only)
 
+### MUST NOT (Critical Boundary)
+
+This section is for **discovery** - identifying WHAT exists and WHERE.
+Detailed execution tracing belongs in **02-code-flows.md**.
+
+| DO NOT | DO INSTEAD |
+|--------|------------|
+| Trace step-by-step execution | List entry points only |
+| Show method call chains | Note "calls ServiceX" without tracing into it |
+| Describe loops, conditionals, algorithms | Describe component responsibilities |
+| Use `outgoingCalls` or `incomingCalls` | Use `workspaceSymbol` and `documentSymbol` |
+| Quote more than method signatures | List method names, defer details to code flows |
+
+**Self-check before writing Section 3:**
+- Am I describing HOW something executes? → Stop, defer to 02-code-flows.md
+- Am I listing WHAT components exist? → Continue
+
 ### 3.1 Primary Execution Surfaces
 | Entry Surface | Type | Primary Components | Evidence |
 |--------------|------|--------------------|----------|
 | {entry} | {type} | {components} | [VERIFIED: LSP operation] |
 
 ### 3.2 High-Level Data Movement
+
+Describe **what moves between components**, not **how it's processed**.
+
 | Stage | Input | Output | Components |
 |-------|-------|--------|------------|
 
 ### 3.3 Pointers to Code Flow Documentation
+
+List operations that SHOULD be traced in detail (in 02-code-flows.md):
 - {Operation 1} - see 02-code-flows.md
 - {Operation 2}
 
@@ -227,22 +259,22 @@ No repository pattern - services likely handle data access directly.
 
 ### Step 3: Identify Entry Points (LSP)
 
-**Find route definitions:**
+**Find route handlers:**
 ```
-workspaceSymbol("Route")
-findReferences on Route class usage
+workspaceSymbol("Controller|Router|Handler")
 ```
 
 **Find event listeners:**
 ```
-workspaceSymbol("Listener|Subscriber")
-findReferences("Event")
+workspaceSymbol("Listener|Subscriber|Handler")
 ```
 
 **Find CLI commands:**
 ```
 workspaceSymbol("Command")
 ```
+
+**Note:** Just list what exists. Do NOT trace how routes connect to handlers - that's for 02-code-flows.md.
 
 ---
 
@@ -253,32 +285,32 @@ workspaceSymbol("Command")
 workspaceSymbol("Component|Page|View")
 ```
 
-**For each component, check its methods:**
+**For each component, list its methods:**
 ```
 documentSymbol("app/Livewire/Calendar.php")
 ```
-→ Public methods are potential frontend triggers
+→ List public methods as potential entry points
 
-**Find what calls backend methods:**
-```
-findReferences("CalendarService")
-```
-→ Shows which components use the service
+**Note:** Do NOT use `findReferences` to trace which components call which services.
+Just list: "CalendarComponent exists, has methods: X, Y, Z"
+The connection tracing belongs in 02-code-flows.md.
 
 ---
 
 ### Step 5: Find External Dependencies (LSP)
 
-**Find HTTP client usage:**
+**Find HTTP client classes:**
 ```
-workspaceSymbol("Http|Client|Request")
-findReferences on HTTP client classes
+workspaceSymbol("Http|Client|ApiClient")
 ```
 
-**Find config/env usage:**
+**Find config/service classes:**
 ```
-findReferences("config|env")
+workspaceSymbol("Config|Settings|Environment")
 ```
+
+**Note:** Just list what external integration classes exist.
+Do NOT trace how they're used - that's for 02-code-flows.md.
 
 ---
 
@@ -307,26 +339,50 @@ As you explore via LSP, note:
 - BookingController: index(), store(), show(), update(), destroy()
 
 [NOT_FOUND: workspaceSymbol("BookingService|NotificationService")]
-No dedicated BookingService. Booking logic is in controller.
+No dedicated BookingService. Booking logic likely in controller.
 
-## 3. Execution Surfaces
+## 3. Execution Surfaces (Discovery Only)
 
 ### 3.1 Primary Execution Surfaces
 
-| Entry Surface | Type | Components | Evidence |
-|--------------|------|------------|----------|
-| POST /booking | Web Route | BookingController, TimeSlot, BookingCreated event | [VERIFIED: findReferences("BookingController")] |
+| Entry Surface | Type | Handler | Evidence |
+|--------------|------|---------|----------|
+| POST /booking | Web Route | BookingController.store() | [VERIFIED: documentSymbol] |
+| GET /bookings | Web Route | BookingController.index() | [VERIFIED: documentSymbol] |
 
 ### 3.2 High-Level Data Movement
 
 | Stage | Input | Output | Components |
 |-------|-------|--------|------------|
-| Request handling | HTTP POST | Validated data | BookingController |
-| Persistence | Validated data | Booking record | TimeSlot model |
-| Event dispatch | Booking record | Event payload | BookingCreated |
+| Request handling | HTTP request | Response | BookingController |
+| Data persistence | - | - | Booking model |
+| Events | - | - | BookingCreated |
+
+**Note:** How these connect is documented in 02-code-flows.md
+
+### 3.3 Recommended Code Flows to Document
+
+- **Create Booking** - trace BookingController.store() → see 02-code-flows.md
+- **Calendar Sync** - trace CalendarService → see 02-code-flows.md
 
 [NOT_FOUND: workspaceSymbol("Mail|Email|Notification")]
-No email notification found.
+No email notification components found.
+```
+
+## Example: BAD Documentation (Too Much Tracing)
+
+```markdown
+## 3. Execution Flow  ← WRONG: This is tracing, not discovery
+
+BookingController.store() calls:
+  → TimeSlot::findOrFail()
+  → Booking::create()
+  → event(new BookingCreated())
+    → SyncToExternalCalendar::handle()
+      → CalendarService::syncBooking()
+        → Http::post()
+
+← This call chain belongs in 02-code-flows.md, NOT architecture!
 ```
 
 ---
@@ -338,7 +394,9 @@ No email notification found.
 - [ ] File:line citations from LSP results
 - [ ] [NOT_FOUND] used when workspaceSymbol returns empty
 - [ ] Verification summary counts are accurate
-- [ ] Section 3 uses tables, defers detailed tracing to 02-code-flows
+- [ ] **No call chains or step-by-step execution traces** (defer to 02-code-flows)
+- [ ] **No outgoingCalls/incomingCalls/goToDefinition used** (those are for tracing)
+- [ ] Section 3 lists WHAT exists, not HOW it executes
 
 ---
 
