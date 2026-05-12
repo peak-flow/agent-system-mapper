@@ -61,6 +61,20 @@ See examples in .pf-agent-system-mapper/examples/ for good vs bad output.
 
 The prompt will auto-detect your framework (Laravel, FastAPI, React, etc.) and reference the appropriate examples.
 
+### Then verify
+
+After the agent writes the doc, run the verifier:
+
+```bash
+python3 .pf-agent-system-mapper/verify.py path/to/the-doc.md
+```
+
+The verifier exits 0 on PASS, 1 on FAIL. Two phases:
+- **Citations** — every `[VERIFIED: path:line]` must resolve to a real file and an in-bounds line range (default ≥95%).
+- **Quoted code** — when a fenced code block follows a tag, the block must match the cited file slice (default ≥90% similarity via `difflib`).
+
+Pure Python stdlib — no install step, runs anywhere Python 3.10+ is available. See `examples/verifier/good-architecture-doc-example.md` for a self-verifying reference.
+
 ---
 
 ## Prompts Available

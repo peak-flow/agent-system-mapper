@@ -412,6 +412,35 @@ As you explore, note:
 
 ---
 
+### Step 8: Run the Verifier (MANDATORY)
+
+After writing the doc, run the structural verifier:
+
+```bash
+python3 .pf-agent-system-mapper/verify.py <path-to-your-doc>
+```
+
+The verifier performs two passes:
+
+**Phase 1 — citation check:** every `[VERIFIED: path:line]` must resolve to a real file and a real in-bounds line number. Default pass threshold is 95% of all parseable citations.
+
+**Phase 2 — quote check:** when a fenced code block immediately follows a tag, the block is compared against the cited slice of the file using `difflib.SequenceMatcher`. Default pass threshold is 90% similarity. A length mismatch or a first-differing-line is reported.
+
+A doc is only "done" when `verify.py` exits 0. If it doesn't:
+
+1. **Read the failure list.** Each line shows `doc:N  path:span — reason` so you can jump directly to the bad tag.
+2. **Fix the doc**, not the verifier. Common causes:
+   - Off-by-one line numbers (you cited `:1-3` but the file has 2 lines)
+   - Stale paths after a rename
+   - A quoted code block drifted from the source (you paraphrased instead of pasting)
+3. **Re-run** and iterate until PASS.
+
+If the verifier reports many "informal" tags (`[VERIFIED]` with prose evidence rather than `file:line`), check whether each one *could* be tightened to a `file:line` citation. Some are legitimately structural (e.g., `[VERIFIED: ls returns 9 files]`) — those are fine. But "informal" is not a free pass to skip verification; only use it when no specific line carries the claim.
+
+**Do not edit the verifier to suppress failures.** Edit the doc to make the claims true.
+
+---
+
 ## Example: BAD Documentation (DO NOT DO THIS)
 
 ```markdown
@@ -511,6 +540,7 @@ Before submitting your documentation:
 - [ ] Known issues section includes problems found during documentation
 - [ ] Someone can checkout the commit and verify every claim
 - [ ] **Section 3 uses tables, not step-by-step arrows** (detailed tracing → 02-code-flows)
+- [ ] **`verify.py` exits 0** — every `[VERIFIED]` tag resolves; every quoted block matches its source
 
 ---
 

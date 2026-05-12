@@ -324,6 +324,20 @@ As you explore via LSP, note:
 
 ---
 
+### Step 7: Run the Verifier (MANDATORY)
+
+After writing the doc, run the structural verifier:
+
+```bash
+python3 .pf-agent-system-mapper/verify.py <path-to-your-doc>
+```
+
+Two passes. **Phase 1** — every `[VERIFIED: path:line]` must resolve to a real file and an in-bounds line range (threshold ≥95%). **Phase 2** — when a fenced code block follows a tag, the block must match the cited file slice via `difflib.SequenceMatcher` (≥90% similarity). The doc is only "done" when `verify.py` exits 0. Fix the doc, not the verifier.
+
+LSP-extracted citations are usually accurate, but symbol locations can drift if the index is stale — re-run after any code change. Run with `-v` to inspect informal tags and per-citation pass/fail.
+
+---
+
 ## Example: GOOD Documentation (LSP-Based)
 
 ```markdown
@@ -397,6 +411,7 @@ BookingController.store() calls:
 - [ ] **No call chains or step-by-step execution traces** (defer to 02-code-flows)
 - [ ] **No outgoingCalls/incomingCalls/goToDefinition used** (those are for tracing)
 - [ ] Section 3 lists WHAT exists, not HOW it executes
+- [ ] **`verify.py` exits 0** — every `[VERIFIED]` tag resolves; every quoted block matches its source
 
 ---
 
