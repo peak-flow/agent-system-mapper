@@ -47,7 +47,10 @@ class Citation:
         return f"{self.start}" if self.end == self.start else f"{self.start}-{self.end}"
 
     def check(self, root: Path) -> tuple[bool, str]:
+        root = root.resolve()
         p = (root / self.path).resolve()
+        if not p.is_relative_to(root):
+            return False, f"path escapes repo root: {self.path}"
         if not p.is_file():
             return False, f"missing file: {self.path}"
         try:
@@ -204,7 +207,10 @@ def check_quoted_code(tag: Tag, doc_lines: list[str], repo_root: Path
     p = (repo_root / c.path).resolve()
     if not p.is_file():
         return None
-    file_lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
+    try:
+        file_lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return None
     if c.end > len(file_lines):
         return None  # phase-1 already flagged this
     actual = _norm_lines(file_lines[c.start - 1 : c.end])
@@ -301,6 +307,8 @@ def main() -> int:
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="list every resolved citation and every informal tag")
     args = ap.parse_args()
+    if not (0.0 <= args.threshold <= 1.0):
+        ap.error("--threshold must be between 0.0 and 1.0")
     return verify(args.doc, args.repo_root.resolve(), args.threshold, args.verbose)
 
 

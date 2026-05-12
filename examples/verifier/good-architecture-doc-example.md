@@ -39,7 +39,7 @@
 |-------|-------|
 | Category | Traditional Code |
 | Type | CLI Tool (single-file Python script with importable functions) |
-| Evidence | `verify.py` is an executable script with `argparse` subcommands and a `__main__` guard [VERIFIED: verify.py:1, verify.py:293-308]; no framework deps, no model files |
+| Evidence | `verify.py` is an executable script with `argparse` options and a `__main__` guard [VERIFIED: verify.py:1, verify.py:293-308]; no framework deps, no model files |
 | Overlay Loaded | No |
 | Confidence | `[VERIFIED]` |
 
