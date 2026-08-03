@@ -1,56 +1,22 @@
-# Prompt: Recommend Code Flows (LSP-Optimized)
+# Overlay: Recommend Code Flows (LSP-Optimized)
 
-You are a documentation strategist. Your task is to analyze an architecture overview and recommend which code flows would be most valuable to document, using **LSP operations** to verify recommendations.
+You are a documentation strategist. **Follow the base prompt
+`../02a-recommend-code-flows.md` in full** — its prerequisites, candidate
+questions, scoring bands, output template, output location, and anti-patterns
+all apply unchanged. This overlay ONLY replaces how you *verify* candidates:
+use LSP operations instead of grep/file reading.
 
----
-
-## LSP Enhancement
-
-This prompt adds LSP verification to ensure recommended flows are traceable:
-- **Verify entry points exist** via `documentSymbol`
-- **Check call complexity** via `outgoingCalls`
-- **Confirm components are real** via `workspaceSymbol`
-
----
-
-## Prerequisites
-
-Before using this prompt:
-1. A completed `01-architecture-overview.md` for the codebase
-2. Read that architecture overview
-3. LSP server running for the target language
+**Scope note:** `01-architecture-overview.md` (LSP variant) forbids
+`outgoingCalls`/`incomingCalls`/`goToDefinition` — that prohibition applies to
+the *architecture* document only, because architecture is discovery, not
+tracing. Here, measuring call complexity is the whole point: `outgoingCalls`
+is required.
 
 ---
 
-## Step 0: Read the Architecture Overview (MANDATORY)
+## LSP Verification (replaces the base prompt's Step 1 verification)
 
-Read the architecture overview document:
-```
-Read: pf-docs/01-architecture-overview.md
-```
-
-Extract and note:
-- System classification
-- Component map
-- Execution surfaces (entry points)
-- Data movement stages
-- Any flows already suggested in Section 3.3
-
----
-
-## Step 1: Identify Flow Candidates
-
-For each execution surface in the architecture, evaluate:
-
-| Question | If Yes → Action |
-|----------|-----------------|
-| Is this the primary user interaction? | **High priority** |
-| Multiple components involved? | Check with `outgoingCalls` depth |
-| Process is "magical" or opaque? | High value to demystify |
-| Errors here cause confusion? | Document for debugging |
-| Has async/background processing? | Document sync vs async boundary |
-
-### LSP Verification for Each Candidate
+For each flow candidate from the architecture overview:
 
 **Verify the entry point exists:**
 ```
@@ -58,244 +24,76 @@ documentSymbol("path/to/suspected/file.ext")
 → Confirm the method/function is present
 ```
 
-**Check flow complexity:**
+**Measure flow complexity:**
 ```
 outgoingCalls("file", line, char)
-→ Count how many calls = complexity indicator
-```
+→ Count direct calls, then check depth on each result
 
-**If outgoingCalls returns 0-2 calls:** Low complexity, may not need detailed flow
-**If outgoingCalls returns 3+ calls:** Worth documenting
-
-### Flow Candidate Template
-
-```markdown
-### Flow: [Name]
-- **Trigger**: What starts this flow?
-- **Entry point**: [VERIFIED: documentSymbol found method]
-- **Complexity**: Low / Medium / High (via outgoingCalls count)
-- **Components involved**: [from workspaceSymbol verification]
-- **User value**: Why document this?
-```
-
----
-
-## Step 2: Prioritize Flows
-
-Score each candidate:
-
-| Criterion | Score | LSP Verification |
-|-----------|-------|------------------|
-| **Frequency**: How often encountered? | 1-3 | - |
-| **Complexity**: outgoingCalls depth | 1-3 | Count calls recursively |
-| **Mystery**: How opaque? | 1-3 | - |
-| **Debug value**: Helps troubleshooting? | 1-3 | - |
-
-**Priority = Sum of scores**
-- 10-12: High priority (document first)
-- 7-9: Medium priority
-- 4-6: Low priority (skip unless requested)
-
-### LSP Complexity Check
-
-```
-// For each candidate entry point:
-outgoingCalls("Controller.php", 45, 10)
-→ Returns: 5 calls
-
-// For each of those calls, check depth:
-outgoingCalls on each result
-→ Build call tree depth
-
-Complexity scoring:
+Complexity scoring (feeds the base prompt's 1-3 Complexity criterion):
 - Depth 1-2, <5 total calls: Low (1)
 - Depth 2-3, 5-10 calls: Medium (2)
 - Depth 3+, 10+ calls: High (3)
 ```
 
----
-
-## Step 3: Generate Recommendations
-
-Output format:
-
-```markdown
-# Code Flow Recommendations: [Project Name]
-
-> Generated: [Date]
-> Based on: [Architecture overview location]
-> Verification: LSP
-
-## Summary
-
-| Flow | Priority | Complexity (LSP) | Components |
-|------|----------|------------------|------------|
-| [Name] | High | 3 (12 calls) | 5 |
-
----
-
-## Recommended Flows
-
-### 1. [Flow Name] (Priority: High)
-
-**Why document this?**
-[1-2 sentences on user value]
-
-**Entry point:** [VERIFIED: documentSymbol]
-- File: `path/to/file.ext`
-- Method: `methodName()`
-- Line: X
-
-**Complexity assessment:** (via outgoingCalls)
-- Direct calls: X
-- Call tree depth: Y
-- Total methods in flow: Z
-
-**Key components:** (verified via workspaceSymbol)
-- [Component 1] - [role] [VERIFIED]
-- [Component 2] - [role] [VERIFIED]
-
-**LSP trace starting point:**
+**Confirm components are real:**
 ```
-outgoingCalls("file.ext", line, char)
-→ First calls to follow: [list]
+workspaceSymbol("ComponentName")
 ```
 
-**Prompt to use:**
-```
-Create code flow documentation for [project] covering:
-[Flow name] - [brief description]
-
-Use LSP tracing starting from:
-- File: path/to/file.ext
-- Method: methodName at line X
-
-Reference architecture at pf-docs/01-architecture-overview.md
-```
+If `outgoingCalls` returns 0-2 calls the flow is likely too simple to document —
+list it in the base template's "Skip These" section with the call count as
+evidence.
 
 ---
 
-### 2. [Next Flow]
-...
+## LSP Additions to the Output Template
+
+Use the base prompt's output template, with these additions per recommended flow:
+
+1. Cite entry points as `[VERIFIED: path:line — via documentSymbol]` — always
+   `path:line` first (see `../00-verification-core.md`).
+2. Add a **Complexity assessment** block showing the actual `outgoingCalls`
+   counts and call-tree depth.
+3. Add an **LSP trace starting point** block so 02-code-flows (LSP variant) can
+   begin immediately:
+   ```
+   outgoingCalls("file.ext", line, char)
+   → First calls to follow: [list]
+   ```
+4. In the "Skip These" table, back every skip with LSP evidence
+   (e.g. `outgoingCalls returned 2 calls`).
 
 ---
 
-## Skip These (Low Value)
+## Validation Checklist (before finalizing)
 
-| Flow | Why Skip | LSP Evidence |
-|------|----------|--------------|
-| [Name] | Too simple | outgoingCalls returned 2 calls |
-| [Name] | Single component | No cross-component calls |
-
----
-
-## Notes
-
-[Caveats, dependencies between flows, suggested order]
-```
-
----
-
-## Step 4: Validate Recommendations
-
-Before finalizing, verify with LSP:
-
-- [ ] Each entry point confirmed via `documentSymbol`
-- [ ] Complexity assessed via `outgoingCalls`
+- [ ] Base prompt `../02a-recommend-code-flows.md` followed for candidates, scoring, template
+- [ ] Each entry point confirmed via `documentSymbol`, cited as `path:line`
+- [ ] Complexity assessed via `outgoingCalls` (not guessed)
 - [ ] Components verified via `workspaceSymbol`
 - [ ] "Skip" section backed by LSP evidence
 - [ ] Prompts include exact file:line for LSP tracing
 
 ---
 
-## Output Location
-
-Save recommendations to:
-```
-pf-docs/CODE-FLOW-RECOMMENDATIONS.md
-```
-
----
-
-## Example Recommendations (LSP-Verified)
+## Example (LSP-Verified Recommendation)
 
 ```markdown
-## Recommended Flows
-
 ### 1. Create Booking Flow (Priority: High - Score 11)
 
 **Why document this?**
 Core user action. Involves 4 components with external API call.
 
-**Entry point:** [VERIFIED: documentSymbol("BookingController.php")]
-- File: `app/Http/Controllers/BookingController.php`
-- Method: `store()`
-- Line: 45
+**Entry point:** [VERIFIED: app/Http/Controllers/BookingController.php:45 — via documentSymbol]
 
 **Complexity assessment:**
-```
 outgoingCalls("BookingController.php", 45, 10)
 → Direct calls: 4 (TimeSlot, Booking, event, redirect)
-
-outgoingCalls on Booking::create
-→ Triggers: BookingObserver::created
-
 findReferences("BookingCreated")
 → Listeners: 1 (SyncToExternalCalendar)
-
-Total call tree: 8 methods across 4 files
-```
-Complexity: High (3)
-
-**Key components:**
-- BookingController [VERIFIED: workspaceSymbol]
-- Booking model [VERIFIED]
-- BookingCreated event [VERIFIED]
-- SyncToExternalCalendar [VERIFIED]
+Total call tree: 8 methods across 4 files → Complexity: High (3)
 
 **LSP trace starting point:**
-```
 outgoingCalls("BookingController.php", 45, 10)
 → Follow: TimeSlot::findOrFail, Booking::create, event()
 ```
-
----
-
-### 2. Calendar Sync Flow (Priority: Medium - Score 8)
-
-**Why document this?**
-External integration, common failure point.
-
-**Entry point:** [VERIFIED: documentSymbol("SyncToExternalCalendar.php")]
-- File: `app/Listeners/SyncToExternalCalendar.php`
-- Method: `handle()`
-- Line: 24
-
-**Complexity assessment:**
-```
-outgoingCalls("SyncToExternalCalendar.php", 24, 10)
-→ Direct calls: 2 (CalendarService::syncBooking, Booking::markSynced)
-→ CalendarService makes Http::post
-```
-Complexity: Medium (2)
-
----
-
-## Skip These
-
-| Flow | Why Skip | LSP Evidence |
-|------|----------|--------------|
-| Show Booking | Display only | outgoingCalls: 1 call (Booking::find) |
-| List Bookings | Query only | outgoingCalls: 1 call (Booking::paginate) |
-```
-
----
-
-## Anti-Patterns
-
-| Don't | Do Instead |
-|-------|------------|
-| Guess at complexity | Use outgoingCalls to measure |
-| Assume components exist | Verify with workspaceSymbol |
-| Recommend without entry point | documentSymbol must confirm |
-| Skip LSP verification | Every recommendation needs LSP backing |
