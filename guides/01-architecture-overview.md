@@ -1,5 +1,11 @@
 # Guide: Architecture Overview Documentation
 
+> **⚠️ SUPERSEDED — do not follow this guide.**
+> The current methodology is `prompts/01-architecture-overview.md`. This guide
+> predates it and teaches patterns the current prompt bans (step-by-step
+> "Data Flow" tracing in the architecture doc, manual re-read verification
+> instead of `verify.py`). Kept for historical context only.
+
 **Purpose:** How to create a verified, anti-hallucination architecture overview that AI agents and developers can trust and act upon.
 
 ---

@@ -81,6 +81,7 @@ Pure Python stdlib — no install step, runs anywhere Python 3.10+ is available.
 
 | Prompt | Purpose |
 |--------|---------|
+| `00-verification-core.md` | Canonical verification tags + verifier step (shared by all prompts) |
 | `01-architecture-overview.md` | System components & structure (with framework detection) |
 | `01a-overlay-model-systems.md` | Additional detection for ML/AI model systems |
 | `02-code-flows.md` | Execution path tracing |
@@ -93,21 +94,22 @@ Pure Python stdlib — no install step, runs anywhere Python 3.10+ is available.
 
 ## Framework-Specific Examples
 
-Each framework has its own mini reference app and good/bad documentation examples:
+Each framework has its own mini reference app (or vendored source) and good/bad documentation examples:
 
-| Framework | Mini App | Description |
-|-----------|----------|-------------|
-| Laravel | `examples/laravel/slotbooker/` | Booking system with MVC, events, services |
+| Framework | Source | Description |
+|-----------|--------|-------------|
+| Laravel | `examples/laravel/slotbooker/` | Booking system with MVC, events, services (+ code-flow example pair) |
 | FastAPI | `examples/fastapi/tasktracker/` | Task management API with repositories, Pydantic |
-| React | `examples/react/` | *(coming soon)* |
-| Vue | `examples/vue/` | *(coming soon)* |
-| Livewire | `examples/livewire/` | *(coming soon)* |
-| Flask | `examples/flask/` | *(coming soon)* |
+| React | `examples/react/expense-tracker/` | SPA with hooks, routing |
+| Next.js | `examples/nextjs/linkboard/` | App Router: server/client components, API routes |
+| Vue | `examples/vue/kanban-board/` | Pinia store, optimistic updates |
+| Livewire | `examples/livewire/approval-flow/` | Laravel + Livewire components |
+| Model-centric (ML/AI) | `examples/model-systems/whisper/` | Vendored openai/whisper source — pairs with the `01a` overlay |
 
-Each framework folder contains:
-- A mini reference app demonstrating that framework's patterns
-- `good-architecture-doc-example.md` - Properly verified documentation
-- `bad-architecture-doc-example.md` - Common hallucination patterns to avoid
+Each folder contains:
+- The mini app / vendored source the docs cite
+- `good-architecture-doc-example.md` - Properly verified documentation (**must pass `verify.py`** — enforced by `scripts/verify-examples.sh` in CI)
+- `bad-architecture-doc-example.md` - Common hallucination patterns, annotated with ❌ callouts explaining each failure
 
 ### Package/Library Examples
 
@@ -126,33 +128,31 @@ Package examples are in `examples/packages/{package}/` with the same good/bad do
 ```
 agent-system-mapper/
 ├── prompts/                     # AI agent prompts (what gets installed)
+│   ├── 00-verification-core.md       # Canonical tags + verifier step (shared)
 │   ├── 01-architecture-overview.md   # With framework detection
 │   ├── 01a-overlay-model-systems.md  # ML/AI model detection overlay
 │   ├── 02-code-flows.md
 │   ├── 02a-recommend-code-flows.md   # Analyze & recommend flows
 │   ├── 03-data-models.md
 │   ├── 04-diagrams.md
-│   └── 05-test-surface.md            # Test candidates from flows
-├── examples/                    # Framework-specific examples
-│   ├── laravel/
-│   │   ├── slotbooker/         # Laravel mini app
-│   │   ├── good-architecture-doc-example.md
-│   │   └── bad-architecture-doc-example.md
-│   ├── fastapi/
-│   │   ├── tasktracker/        # FastAPI mini app
-│   │   ├── good-architecture-doc-example.md
-│   │   └── bad-architecture-doc-example.md
-│   ├── react/                   # (coming soon)
-│   ├── vue/                     # (coming soon)
-│   ├── livewire/                # (coming soon)
-│   ├── flask/                   # (coming soon)
-│   ├── packages/                # Library/package examples
-│   │   └── requests/            # Python HTTP client
-│   └── test-surface/            # Test surface examples (framework-agnostic)
-│       ├── good-test-surface-example.md
-│       └── bad-test-surface-example.md
-├── guides/                      # Methodology guides
-│   └── 01-architecture-overview.md
+│   ├── 05-test-surface.md            # Test candidates from flows
+│   └── lsp/                          # LSP-optimized variants
+├── examples/                    # Every good example must pass verify.py (CI-enforced)
+│   ├── laravel/                 # slotbooker mini app + architecture AND code-flow pairs
+│   ├── fastapi/                 # tasktracker mini app + pair
+│   ├── react/                   # expense-tracker mini app + pair
+│   ├── nextjs/                  # linkboard mini app (App Router) + pair
+│   ├── vue/                     # kanban-board mini app + pair
+│   ├── livewire/                # approval-flow mini app + pair
+│   ├── model-systems/           # vendored openai/whisper + pair (01a overlay)
+│   ├── packages/
+│   │   └── requests/            # vendored requests source + pair
+│   ├── verifier/                # self-verifying example (documents verify.py)
+│   └── test-surface/            # test surface pair (cites slotbooker)
+├── skills/                      # Claude Code slash commands (/map-arch, /map-verify, ...)
+├── scripts/
+│   └── verify-examples.sh       # CI guard: every good example must PASS
+├── verify.py                    # Two-phase doc verifier
 └── install.sh                   # Installation script
 ```
 
@@ -160,7 +160,7 @@ agent-system-mapper/
 
 ## Getting Started (Contributors)
 
-1. Read the guides in `guides/` to understand the methodology
+1. Read the prompts in `prompts/` to understand the methodology (`guides/` is superseded)
 2. Examine mini apps in `examples/{framework}/` as reference implementations
 3. Review good vs bad examples to understand hallucination patterns
 4. Test prompts against mini apps to validate changes
@@ -176,8 +176,10 @@ The architecture prompt auto-detects frameworks using these patterns:
 | Laravel | `composer.json` with `laravel/framework` |
 | FastAPI | `requirements.txt` with `fastapi` |
 | React | `package.json` with `react` |
+| Next.js | `package.json` with `next` |
 | Vue | `package.json` with `vue` |
 | Livewire | Laravel + `livewire/livewire` in `composer.json` |
-| Flask | `requirements.txt` with `flask` |
+| Model-centric (ML/AI) | Weights files, `torch`/`transformers` deps — loads the `01a` overlay |
 
-If your framework isn't supported yet, use Laravel examples as a baseline.
+If your framework isn't supported yet, use the packages/requests examples as a
+generic baseline (or Laravel for web frameworks) and adapt terminology.
