@@ -1,5 +1,5 @@
 ---
-description: Generate Mermaid diagrams from verified documentation
+description: Generate Mermaid diagrams from verified documentation. Use when the user asks for diagrams, visualizations, ERDs, or flowcharts of documented architecture, flows, or data models.
 ---
 
 # /map-diagrams — Generate Diagrams

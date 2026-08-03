@@ -1,5 +1,5 @@
 ---
-description: Derive test candidates from verified code flows
+description: Derive test candidates from verified code flows. Use when the user asks what to test, wants test candidates or a test plan derived from documented flows.
 ---
 
 # /map-tests — Test Surface Documentation
@@ -25,4 +25,6 @@ If no code flow exists, tell the user to run `/map-flows` first.
 
 **Output to:** `pf-docs/05-test-surface-{flow-name}.md`
 
-Also read the example at `.pf-agent-system-mapper/examples/test-surface/good-test-surface-example.md` for proper format.
+Also read the example pair at `.pf-agent-system-mapper/examples/test-surface/` — the good example for proper format, the bad example for annotated anti-patterns.
+
+**After writing:** run `python3 .pf-agent-system-mapper/verify.py pf-docs/05-test-surface-{flow-name}.md` and fix the doc until it exits 0 (PASS).

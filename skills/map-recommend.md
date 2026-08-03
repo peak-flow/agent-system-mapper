@@ -1,5 +1,5 @@
 ---
-description: Analyze architecture and recommend which code flows to document
+description: Analyze architecture and recommend which code flows to document. Use when the user asks which flows to document, what to document next, or wants flow recommendations.
 ---
 
 # /map-recommend — Recommend Code Flows

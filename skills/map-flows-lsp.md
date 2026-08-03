@@ -1,5 +1,5 @@
 ---
-description: Document code flows using LSP-optimized methodology (experimental)
+description: Document code flows using LSP-optimized methodology (experimental). Use when the user asks to trace an execution path with LSP, or document a code flow with fewer tokens.
 ---
 
 # /map-flows-lsp — Code Flow Documentation (LSP)
@@ -24,8 +24,10 @@ If no flow name is provided, ask the user which flow to document.
 **Output to:** `pf-docs/02-code-flow-{flow-name}.md`
 
 Follow ALL anti-hallucination rules:
-- Cite every step with `[VERIFIED: LSP operation]`
+- Cite every step with `[VERIFIED: path:line — via LSP operation]` — the `path:line` part is mandatory
 - Use `outgoingCalls` to discover the call chain
 - Document dead ends with `[NOT_FOUND: LSP operation returned empty]`
+
+**After writing:** run `python3 .pf-agent-system-mapper/verify.py pf-docs/02-code-flow-{flow-name}.md` and fix the doc until it exits 0 (PASS).
 
 If `.pf-agent-system-mapper/prompts/lsp/` doesn't exist, tell the user to run `/map-install` first.

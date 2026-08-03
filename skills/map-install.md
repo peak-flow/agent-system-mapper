@@ -1,5 +1,5 @@
 ---
-description: Install agent-system-mapper prompts to current directory
+description: Install agent-system-mapper prompts to current directory. Use when the user asks to install the mapper, set up documentation prompts, or run map-install.
 ---
 
 # /map-install — Install Agent System Mapper
