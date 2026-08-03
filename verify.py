@@ -21,8 +21,11 @@ from pathlib import Path
 
 
 # Top-level tag form: [VERIFIED: ...] / [NOT_FOUND: ...] / [INFERRED] / [ASSUMED: ...]
+# NEEDS_RUNTIME (code-flow docs) and DRIFT (data-model docs) are counted but,
+# like the other non-VERIFIED kinds, carry no resolvable citation obligation.
 TAG_RE = re.compile(
-    r"\[(VERIFIED|NOT_FOUND|INFERRED|ASSUMED|NEEDS_VERIFICATION)(?::\s*([^\]]+))?\]"
+    r"\[(VERIFIED|NOT_FOUND|INFERRED|ASSUMED|NEEDS_VERIFICATION|NEEDS_RUNTIME|DRIFT)"
+    r"(?::\s*([^\]]+))?\]"
 )
 # Fresh citation: path with extension OR a slash, optionally backticked, then :N(-N)?
 FRESH_CITE = re.compile(
@@ -220,6 +223,22 @@ def check_quoted_code(tag: Tag, doc_lines: list[str], repo_root: Path
     return QuoteCheck(tag, c, fence_line, ratio, ratio >= QUOTE_RATIO_PASS, hint)
 
 
+def emit_summary(doc_path: Path) -> int:
+    """Print a ready-to-paste Verification Summary block with accurate counts."""
+    tags = parse_doc(doc_path.read_text())
+    counts: dict[str, int] = {}
+    for tag in tags:
+        counts[tag.kind] = counts.get(tag.kind, 0) + 1
+    print("## Verification Summary")
+    for kind in ("VERIFIED", "INFERRED", "NOT_FOUND", "ASSUMED",
+                 "NEEDS_VERIFICATION", "NEEDS_RUNTIME", "DRIFT"):
+        if counts.get(kind):
+            noun = "item" if kind in ("NOT_FOUND", "ASSUMED") else "claim"
+            plural = "" if counts[kind] == 1 else "s"
+            print(f"- [{kind}]: {counts[kind]} {noun}{plural}")
+    return 0
+
+
 def verify(doc_path: Path, repo_root: Path, threshold: float, verbose: bool) -> int:
     text = doc_path.read_text()
     doc_lines = text.splitlines()
@@ -306,9 +325,14 @@ def main() -> int:
                     help="min fraction of citations that must resolve (default: 0.95)")
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="list every resolved citation and every informal tag")
+    ap.add_argument("--emit-summary", action="store_true",
+                    help="print a ready-to-paste Verification Summary block "
+                         "with accurate tag counts, then exit")
     args = ap.parse_args()
     if not (0.0 <= args.threshold <= 1.0):
         ap.error("--threshold must be between 0.0 and 1.0")
+    if args.emit_summary:
+        return emit_summary(args.doc)
     return verify(args.doc, args.repo_root.resolve(), args.threshold, args.verbose)
 
 
