@@ -40,6 +40,9 @@ Before using this prompt, you MUST have:
 1. A completed Code Flow document created using `02-code-flows.md`
 2. Verified `[VERIFIED: file:line]` references for each step
 3. Read the Code Flow document in full
+4. Read the reference example pair (MANDATORY):
+   - `../examples/test-surface/good-test-surface-example.md` — expected format, verified against the bundled slotbooker app
+   - `../examples/test-surface/bad-test-surface-example.md` — annotated anti-patterns to avoid
 
 **DO NOT proceed without a verified Code Flow document.**
 
@@ -54,7 +57,7 @@ Each test candidate MUST reference the flow step(s) that justify it:
 ```markdown
 Test Candidate: Booking status transitions to 'confirmed'
 Based on: Step 3, Step 5 of Code Flow
-[VERIFIED: BookingController.php:55, BookingService.php:89]
+[VERIFIED: BookingController.php:55, CalendarService.php:28]
 ```
 
 ### Rule 2: No Invented Behavior
@@ -73,9 +76,13 @@ You may NOT:
 
 | Tag | Use When |
 |-----|----------|
-| `[VERIFIED]` | Behavior is explicitly shown in code flow |
+| `[VERIFIED: path:line]` | Behavior is explicitly shown in code flow |
 | `[INFERRED]` | Behavior follows logically from verified code |
-| `[NOT_FOUND]` | Behavior is undefined or missing in codebase |
+| `[NOT_FOUND: search]` | Behavior is undefined or missing in codebase |
+| `[ASSUMED: reason]` | Framework convention, not verified code |
+| `[NEEDS_VERIFICATION]` | Requires runtime or human confirmation |
+
+Canonical tag vocabulary and rules: `00-verification-core.md` (it wins on any disagreement).
 
 ### Rule 4: Distinguish Test Types Clearly
 
@@ -319,6 +326,7 @@ pf-docs/05-test-surface-{flow-name}.md
 | Field | Value |
 |-------|-------|
 | Flow Document | {path} |
+| Source Commit | {hash} |
 | Generated | {date} |
 | Flow Steps | {count} |
 
@@ -391,6 +399,18 @@ Why it's bad:
 - No flow step reference
 - No verification tag
 - "First login" logic not in the traced flow (invented behavior)
+
+---
+
+## Final Step: Run the Verifier (MANDATORY)
+
+```bash
+python3 .pf-agent-system-mapper/verify.py <path-to-your-test-surface-doc>
+```
+
+The doc is only "done" when `verify.py` exits 0 — every `[VERIFIED: file:line]`
+citation must resolve against the codebase the flow was traced from. Fix the
+doc, not the verifier. See `00-verification-core.md`.
 
 ---
 

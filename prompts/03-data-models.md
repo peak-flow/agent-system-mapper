@@ -87,7 +87,10 @@ A user could theoretically book the same slot twice. No database-level preventio
 | `[INFERRED]` | Logical conclusion from schema (e.g., "nullable means optional") |
 | `[NOT_FOUND: search]` | Expected constraint/field doesn't exist |
 | `[ASSUMED: reason]` | Framework default behavior |
-| `[DRIFT]` | Migration and model don't match |
+| `[NEEDS_VERIFICATION]` | Requires runtime or human confirmation |
+| `[DRIFT: description]` | Migration and model don't match — describe both sides with citations |
+
+Canonical tag vocabulary and rules: `00-verification-core.md` (it wins on any disagreement).
 
 ---
 
@@ -467,3 +470,4 @@ erDiagram
 - [ ] DRIFT noted for migration/model mismatches
 - [ ] ERD diagram created
 - [ ] Missing constraints called out
+- [ ] **`verify.py` exits 0** — run `python3 .pf-agent-system-mapper/verify.py <your-doc>`; every citation resolves, every quoted block matches its source (see `00-verification-core.md`)
