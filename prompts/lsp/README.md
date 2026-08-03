@@ -41,6 +41,7 @@ and document this codebase following that methodology.
 Or use the slash commands (if installed):
 - `/map-arch-lsp` - Architecture overview with LSP
 - `/map-flows-lsp` - Code flow tracing with LSP
+- `/map-recommend-lsp` - Flow recommendations with LSP verification
 
 ## LSP Operations Used
 

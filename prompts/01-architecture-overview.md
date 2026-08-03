@@ -256,13 +256,16 @@ Before writing ANY documentation, you MUST read the appropriate example file to 
 | System Type | Example to Read |
 |-------------|-----------------|
 | Library/Package | `../examples/packages/requests/good-architecture-doc-example.md` |
+| Model-Centric (ML/AI) | `../examples/model-systems/good-architecture-doc-example.md` |
 | Laravel | `../examples/laravel/good-architecture-doc-example.md` |
 | FastAPI | `../examples/fastapi/good-architecture-doc-example.md` |
 | React | `../examples/react/good-architecture-doc-example.md` |
+| Next.js | `../examples/nextjs/good-architecture-doc-example.md` |
 | Vue | `../examples/vue/good-architecture-doc-example.md` |
 | Livewire | `../examples/livewire/good-architecture-doc-example.md` |
-| Flask | `../examples/flask/good-architecture-doc-example.md` |
 | Other/Unknown | Use `../examples/packages/requests/good-architecture-doc-example.md` as default |
+
+This table is the single source of truth for example selection — later sections refer back to it.
 
 **After reading the example, confirm:**
 ```markdown
@@ -439,6 +442,10 @@ If the verifier reports many "informal" tags (`[VERIFIED]` with prose evidence r
 
 **Do not edit the verifier to suppress failures.** Edit the doc to make the claims true.
 
+For a worked example of a doc that passes the verifier, see
+`../examples/verifier/good-architecture-doc-example.md` — it documents `verify.py`
+itself and ships with a `Verify with:` command block you can copy into your own doc.
+
 ---
 
 ## Example: BAD Documentation (DO NOT DO THIS)
@@ -555,9 +562,10 @@ Before documenting, identify the framework/stack to load appropriate examples.
 | Laravel | `composer.json` with `laravel/framework`, `artisan` file | `examples/laravel/` |
 | FastAPI | `requirements.txt` with `fastapi`, `main.py` with `FastAPI(` | `examples/fastapi/` |
 | React | `package.json` with `react`, `src/` with `.jsx`/`.tsx` files | `examples/react/` |
+| Next.js | `package.json` with `next`, `app/` or `pages/` dir | `examples/nextjs/` |
 | Vue | `package.json` with `vue`, `.vue` files | `examples/vue/` |
 | Laravel Livewire | Laravel + `livewire/livewire` in `composer.json` | `examples/livewire/` |
-| Flask | `requirements.txt` with `flask`, `app.py` or `__init__.py` with `Flask(` | `examples/flask/` |
+| Model-Centric (ML/AI) | See Step 0a indicators (weights, torch/transformers) | `examples/model-systems/` |
 
 ### Detection Steps
 
@@ -588,28 +596,6 @@ If no framework-specific example exists, use the Laravel examples as a baseline 
 
 ## Reference Examples
 
-**REMINDER: You MUST read the relevant example in Step 0c before writing documentation.**
+**REMINDER: You MUST read the relevant example in Step 0c before writing documentation.** The Step 0c table is the single source of truth for which good example to read.
 
-Framework-specific examples are located in `../examples/{framework}/`:
-
-| Framework | Good Example | Bad Example |
-|-----------|--------------|-------------|
-| Laravel | `../examples/laravel/good-architecture-doc-example.md` | `../examples/laravel/bad-architecture-doc-example.md` |
-| FastAPI | `../examples/fastapi/good-architecture-doc-example.md` | `../examples/fastapi/bad-architecture-doc-example.md` |
-| React | `../examples/react/good-architecture-doc-example.md` | `../examples/react/bad-architecture-doc-example.md` |
-| Vue | `../examples/vue/good-architecture-doc-example.md` | `../examples/vue/bad-architecture-doc-example.md` |
-| Livewire | `../examples/livewire/good-architecture-doc-example.md` | `../examples/livewire/bad-architecture-doc-example.md` |
-| Flask | `../examples/flask/good-architecture-doc-example.md` | `../examples/flask/bad-architecture-doc-example.md` |
-
-Package/library examples are in `../examples/packages/{package}/`:
-
-| Package | Good Example | Bad Example |
-|---------|--------------|-------------|
-| Requests (Python) | `../examples/packages/requests/good-architecture-doc-example.md` | `../examples/packages/requests/bad-architecture-doc-example.md` |
-
-**Selection rules:**
-- Libraries/Packages → Use Requests example
-- Web frameworks → Use matching framework example
-- Unknown/Other → Use Requests example (most generic)
-
-**Also read the BAD example** to understand what mistakes to avoid (hallucinated features, step-by-step tracing, missing verification tags).
+Every good example has a sibling `bad-architecture-doc-example.md` in the same directory. **Also read the BAD example** — each one is annotated with ❌ callouts explaining the hallucination patterns to avoid (invented components, step-by-step tracing, missing verification tags, selectively truncated quotes).

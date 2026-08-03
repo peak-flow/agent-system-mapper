@@ -36,10 +36,13 @@ A Code Flow documents **how a specific operation executes** from trigger to comp
 ## Anti-Hallucination Rules (CRITICAL)
 
 ### Rule 1: LSP-Verified Steps Only
-Each step MUST come from LSP results:
+Each step MUST come from LSP results, cited as `path:line` (the LSP operation
+goes after ` — via`):
 ```
-Step 1: [VERIFIED: goToDefinition → BookingController.php:45]
+Step 1: [VERIFIED: app/Http/Controllers/BookingController.php:45 — via goToDefinition]
 ```
+NEVER cite only the operation — a tag without `path:line` cannot be resolved
+by `verify.py` and the doc cannot pass.
 
 ### Rule 2: Follow the Call Hierarchy
 Use `outgoingCalls` to discover the next step - don't guess from method names.
@@ -62,11 +65,18 @@ Flow may end here or handler is registered dynamically.
 
 | Tag | When to Use |
 |-----|-------------|
-| `[VERIFIED: LSP operation]` | LSP returned this path |
+| `[VERIFIED: path:line — via LSP operation]` | LSP returned this path at this location |
 | `[INFERRED]` | Logical conclusion from verified results |
 | `[NOT_FOUND: LSP search]` | LSP couldn't find next step |
 | `[ASSUMED: reason]` | Framework convention |
 | `[NEEDS_RUNTIME]` | Behavior depends on runtime state |
+
+Canonical tag rules: `../00-verification-core.md`.
+
+**Quoting policy (LSP variant):** you may replace full code quotes with hover
+signatures to save tokens — but every step still needs a `path:line` citation,
+and if you DO quote code in a fenced block after a tag, it must match the cited
+slice exactly (the verifier diff-checks it).
 
 ---
 
@@ -100,7 +110,7 @@ Flow may end here or handler is registered dynamically.
 ## Detailed Flow
 
 ### Step 1: Entry Point
-[VERIFIED: documentSymbol → method signature]
+[VERIFIED: path/file.ext:line — via documentSymbol]
 **File:** `path/file.ext:line`
 **Signature:** `methodName(params): returnType`
 
@@ -113,7 +123,7 @@ Flow may end here or handler is registered dynamically.
 ---
 
 ### Step 2: {Next Component}
-[VERIFIED: goToDefinition from Step 1]
+[VERIFIED: path/file.ext:line — via goToDefinition from Step 1]
 ...
 
 ---
@@ -210,7 +220,6 @@ outgoingCalls("Booking.php", 28, 10)
 findReferences("BookingCreated")
 → Results:
   - SyncToExternalCalendar::handle() at line 24
-  - SendConfirmationEmail::handle() at line 18
 ```
 
 ### Step 4: Document Each Step
@@ -298,7 +307,7 @@ BookingController::store()
 ---
 
 ### Step 1: Route Handler
-[VERIFIED: documentSymbol("BookingController.php")]
+[VERIFIED: app/Http/Controllers/BookingController.php:45 — via documentSymbol]
 
 **File:** `app/Http/Controllers/BookingController.php:45`
 
@@ -316,7 +325,7 @@ public function store(Request $request): RedirectResponse
 ---
 
 ### Step 2: Create Booking
-[VERIFIED: goToDefinition from line 49]
+[VERIFIED: app/Models/Booking.php:9 — via goToDefinition from line 49]
 
 **File:** `app/Models/Booking.php` (inherits Model::create)
 
@@ -326,7 +335,7 @@ public function store(Request $request): RedirectResponse
 ---
 
 ### Step 3: Event Dispatch
-[VERIFIED: findReferences("BookingCreated")]
+[VERIFIED: app/Listeners/SyncToExternalCalendar.php:24 — via findReferences("BookingCreated")]
 
 **Listeners found:**
 | Listener | File | Method |
@@ -339,7 +348,7 @@ No email confirmation listener registered.
 ---
 
 ### Step 4: Calendar Sync
-[VERIFIED: outgoingCalls on SyncToExternalCalendar::handle()]
+[VERIFIED: app/Listeners/SyncToExternalCalendar.php:24 — via outgoingCalls on handle()]
 
 **File:** `app/Listeners/SyncToExternalCalendar.php:24`
 
@@ -349,7 +358,7 @@ No email confirmation listener registered.
 ---
 
 ### Step 5: External API Call
-[VERIFIED: outgoingCalls on CalendarService::syncBooking()]
+[VERIFIED: app/Services/CalendarService.php:42 — via outgoingCalls on syncBooking()]
 
 **File:** `app/Services/CalendarService.php:42`
 
@@ -407,9 +416,14 @@ When LSP fails, document as `[NOT_FOUND: {operation}]` and explain the gap.
 
 ## Final Checklist
 
+- [ ] Reference example pair read (`.pf-agent-system-mapper/examples/laravel/good-code-flow-doc-example.md` and its bad sibling — grep-based, but the structure lessons apply)
 - [ ] Entry point verified via documentSymbol
 - [ ] Each step traced via outgoingCalls/goToDefinition
+- [ ] Every `[VERIFIED]` tag carries `path:line`
 - [ ] Events traced via findReferences
 - [ ] External calls documented
+- [ ] Data shapes shown at key transitions (from hover)
 - [ ] [NOT_FOUND] used for LSP dead ends
 - [ ] Flow diagram reflects actual LSP call hierarchy
+- [ ] Known issues documented
+- [ ] **`verify.py` exits 0** — run `python3 .pf-agent-system-mapper/verify.py <your-doc>`; every citation resolves, any quoted block matches its source (see `../00-verification-core.md`)

@@ -1,5 +1,5 @@
 ---
-description: Generate architecture overview using agent-system-mapper methodology
+description: Generate architecture overview using agent-system-mapper methodology. Use when the user asks to document the architecture, map this codebase, create an architecture overview, or understand system structure.
 ---
 
 # /map-arch — Architecture Overview
@@ -13,5 +13,7 @@ Read the methodology at `.pf-agent-system-mapper/prompts/01-architecture-overvie
 **Output to:** `pf-docs/01-architecture-overview.md`
 
 Follow ALL anti-hallucination rules. Use `[VERIFIED: file:line]` tags for every claim.
+
+**After writing:** run `python3 .pf-agent-system-mapper/verify.py pf-docs/01-architecture-overview.md` and fix the doc until it exits 0 (PASS). The doc is not done until it passes.
 
 If `.pf-agent-system-mapper/` doesn't exist, tell the user to run `/map-install` first.

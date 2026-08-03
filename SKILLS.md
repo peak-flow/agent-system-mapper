@@ -38,9 +38,11 @@ curl -sL "https://raw.githubusercontent.com/peak-flow/agent-system-mapper/master
 | `/map-flows [name]` | Document a specific code flow | Architecture doc |
 | `/map-flows-lsp [name]` | Code flow (LSP, 60% fewer tokens) | Architecture doc + LSP |
 | `/map-recommend` | Recommend which flows to document | Architecture doc |
+| `/map-recommend-lsp` | Flow recommendations (LSP-verified entry points + complexity) | Architecture doc + LSP |
 | `/map-data` | Document data models and schema | Prompts installed |
 | `/map-diagrams` | Generate Mermaid diagrams | At least one doc exists |
 | `/map-tests` | Derive test candidates from flows | Code flow doc |
+| `/map-verify [doc]` | Verify citations + quoted code; a doc is done only at PASS | Any generated doc |
 
 ---
 
@@ -53,16 +55,21 @@ The recommended workflow is:
          ↓
 2. /map-arch             → Document architecture (or /map-arch-lsp)
          ↓
-3. /map-recommend        → Get prioritized list of flows to document
+3. /map-verify           → Verify the doc (citations + quoted code); fix until PASS
          ↓
-4. /map-flows [name]     → Document each recommended flow (or /map-flows-lsp)
+4. /map-recommend        → Get prioritized list of flows to document
          ↓
-5. /map-data             → Document data models
+5. /map-flows [name]     → Document each recommended flow (or /map-flows-lsp)
          ↓
-6. /map-diagrams         → Generate visual diagrams
+6. /map-data             → Document data models
          ↓
-7. /map-tests            → Derive test candidates from flows
+7. /map-diagrams         → Generate visual diagrams
+         ↓
+8. /map-tests            → Derive test candidates from flows
 ```
+
+Run `/map-verify` after every doc-producing step (arch, flows, data, tests) —
+a doc is only "done" when `verify.py` exits 0.
 
 ---
 
@@ -249,7 +256,7 @@ Derives test candidates from documented code flows.
 
 | Aspect | Standard (`/map-arch`) | LSP (`/map-arch-lsp`) |
 |--------|------------------------|----------------------|
-| Token usage | 15-26k | 7-12k |
+| Token usage | 8-12k (whole pipeline: 15-26k) | 4-6k (whole pipeline: 7-12k) |
 | Requirements | None | LSP server |
 | Best for | All languages | TypeScript, Python, PHP |
 | Tradeoff | Works everywhere | 50% fewer tokens |

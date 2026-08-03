@@ -70,6 +70,8 @@ Output: Booking model instance with status='pending'
 | `[ASSUMED: reason]` | Framework convention, not verified |
 | `[NEEDS_RUNTIME]` | Behavior depends on runtime state |
 
+Canonical tag vocabulary and rules: `00-verification-core.md` (it wins on any disagreement).
+
 ---
 
 ## Output Format
@@ -161,6 +163,16 @@ Do NOT search for Laravel patterns in a React app.
 Do NOT assume MVC structure in a plain PHP site.
 
 ---
+
+### Step 0b: Read the Reference Example (MANDATORY)
+
+Before tracing anything, read the code-flow example pair:
+
+- `../examples/laravel/good-code-flow-doc-example.md` — the expected format, verified against the bundled slotbooker app
+- `../examples/laravel/bad-code-flow-doc-example.md` — annotated hallucination patterns to avoid
+
+Even if your target isn't Laravel, these show the required structure: cited steps,
+exact quoted code, data shapes, event tracing, and NOT_FOUND dead ends.
 
 ### Step 1: Define the Flow
 Ask yourself:
@@ -486,3 +498,4 @@ $response = Http::withHeaders([
 - [ ] Flow diagram created
 - [ ] [NOT_FOUND] used for dead ends or missing pieces
 - [ ] Known issues documented
+- [ ] **`verify.py` exits 0** — run `python3 .pf-agent-system-mapper/verify.py <your-doc>`; every citation resolves, every quoted block matches its source (see `00-verification-core.md`)

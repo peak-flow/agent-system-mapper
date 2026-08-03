@@ -57,6 +57,7 @@ EmailService as dashed box with [NOT_FOUND] label
 | `[INFERRED]` | Solid lines, italic label |
 | `[NOT_FOUND]` | Dashed lines/boxes, gray |
 | `[ASSUMED]` | Dotted lines, labeled |
+| `[NEEDS_VERIFICATION]` | Dashed lines, `?` suffix on label |
 
 ### Rule 4: Include Provenance
 Every diagram MUST include:
@@ -223,6 +224,7 @@ sequenceDiagram
 | *Italic label* | [INFERRED] - logical conclusion |
 | Dashed box/line | [NOT_FOUND] - expected but missing |
 | Dotted line | [ASSUMED] - convention-based |
+| Dashed line, `?` label | [NEEDS_VERIFICATION] - unconfirmed |
 
 ---
 
@@ -295,7 +297,9 @@ Extract the system type to generate appropriate diagrams.
 | Frontend SPA | Show components, state, API calls |
 | Plain PHP | Show files, includes, handlers |
 
-If no System Classification in source doc, infer from the components documented.
+If no System Classification in source doc, mark the classification `[INFERRED]`
+in the provenance table and note what it was inferred from — do not present it
+as verified.
 
 ---
 
@@ -370,7 +374,7 @@ graph TB
 ## Metadata
 | Field | Value |
 |-------|-------|
-| Source Document | `../examples/laravel/good-architecture-doc-example.md` |
+| Source Document | `pf-docs/01-architecture-overview.md` |
 | Source Commit | `e043013` |
 | Generated | `2025-01-15` |
 

@@ -54,13 +54,17 @@ Before stating something doesn't exist:
 1. Use `workspaceSymbol` with multiple patterns
 2. Document your search: `[NOT_FOUND: workspaceSymbol("Email|Mail|Notify")]`
 
-### Rule 4: Cite LSP Results, Don't Paraphrase
+### Rule 4: Cite File:Line, Note the LSP Operation
+LSP results include file and line — always carry them into the tag so the
+verifier can resolve the citation. The LSP operation goes AFTER the citation:
+
 ```
-[VERIFIED: workspaceSymbol("Controller") returned 5 matches]
-- UserController: app/Http/Controllers/UserController.php
-- BookingController: app/Http/Controllers/BookingController.php
-...
+[VERIFIED: app/Http/Controllers/UserController.php:12 — via workspaceSymbol("Controller")]
+[VERIFIED: app/Http/Controllers/BookingController.php:15 — via workspaceSymbol("Controller")]
 ```
+
+NEVER cite only the operation (`[VERIFIED: workspaceSymbol("Controller")]`) —
+that produces zero resolvable citations and the doc cannot pass `verify.py`.
 
 ### Rule 5: Separate Verified from Inferred
 - `[VERIFIED]` = LSP operation returned this result
@@ -73,11 +77,14 @@ Before stating something doesn't exist:
 
 | Tag | When to Use |
 |-----|-------------|
-| `[VERIFIED: LSP operation]` | LSP returned this result |
+| `[VERIFIED: path:line — via LSP operation]` | LSP returned this result at this location |
 | `[INFERRED]` | Logical conclusion from LSP results |
 | `[NOT_FOUND: LSP search]` | workspaceSymbol/findReferences returned empty |
 | `[ASSUMED: reason]` | Based on convention, not LSP verified |
 | `[NEEDS_VERIFICATION]` | Requires runtime or human confirmation |
+
+The `path:line` part is mandatory in every `[VERIFIED]` tag — the ` — via ...`
+suffix is optional context. Canonical tag rules: `../00-verification-core.md`.
 
 ---
 
@@ -207,7 +214,21 @@ workspaceSymbol("Model|Pipeline|Inference|Forward")
 documentSymbol on any .py files in model/ or src/
 ```
 
-If model-centric: Read `01a-overlay-model-systems.md` before continuing.
+If model-centric: **STOP and read `../01a-overlay-model-systems.md`** (one level
+up, in `prompts/`) before continuing.
+
+---
+
+### Step 0c: Read the Relevant Example (MANDATORY)
+
+Before writing ANY documentation, read the good example matching your
+classification — the selection table lives in
+`../01-architecture-overview.md` Step 0c and the files are in
+`.pf-agent-system-mapper/examples/{framework}/`. Also read the sibling
+`bad-architecture-doc-example.md` — each is annotated with the hallucination
+patterns to avoid.
+
+**DO NOT proceed to Step 1 until you have read the example.**
 
 ---
 
@@ -345,9 +366,9 @@ LSP-extracted citations are usually accurate, but symbol locations can drift if 
 
 | Component | Location | Evidence |
 |-----------|----------|----------|
-| BookingController | `app/Http/Controllers/BookingController.php` | [VERIFIED: workspaceSymbol("Controller")] |
-| CalendarService | `app/Services/CalendarService.php` | [VERIFIED: workspaceSymbol("Service")] |
-| User model | `app/Models/User.php` | [VERIFIED: workspaceSymbol("Model")] |
+| BookingController | `app/Http/Controllers/BookingController.php` | [VERIFIED: app/Http/Controllers/BookingController.php:14 — via workspaceSymbol("Controller")] |
+| CalendarService | `app/Services/CalendarService.php` | [VERIFIED: app/Services/CalendarService.php:10 — via workspaceSymbol("Service")] |
+| User model | `app/Models/User.php` | [VERIFIED: app/Models/User.php:7 — via workspaceSymbol("Model")] |
 
 **Controller Methods (via documentSymbol):**
 - BookingController: index(), store(), show(), update(), destroy()
@@ -361,8 +382,8 @@ No dedicated BookingService. Booking logic likely in controller.
 
 | Entry Surface | Type | Handler | Evidence |
 |--------------|------|---------|----------|
-| POST /booking | Web Route | BookingController.store() | [VERIFIED: documentSymbol] |
-| GET /bookings | Web Route | BookingController.index() | [VERIFIED: documentSymbol] |
+| POST /booking | Web Route | BookingController.store() | [VERIFIED: routes/web.php:20 — via documentSymbol] |
+| GET /bookings | Web Route | BookingController.index() | [VERIFIED: routes/web.php:16 — via documentSymbol] |
 
 ### 3.2 High-Level Data Movement
 
@@ -403,9 +424,10 @@ BookingController.store() calls:
 
 ## Final Checklist
 
+- [ ] Reference example read before writing (Step 0c)
 - [ ] Metadata includes commit hash and verification method = LSP
 - [ ] Every component discovered via workspaceSymbol or documentSymbol
-- [ ] File:line citations from LSP results
+- [ ] Every `[VERIFIED]` tag carries `path:line` (LSP operation optional, after ` — via`)
 - [ ] [NOT_FOUND] used when workspaceSymbol returns empty
 - [ ] Verification summary counts are accurate
 - [ ] **No call chains or step-by-step execution traces** (defer to 02-code-flows)
@@ -432,6 +454,9 @@ Use workspaceSymbol patterns to detect framework:
 
 ## Reference Examples
 
-Framework-specific examples are in `../examples/{framework}/`:
-- Read the good example for patterns to follow
-- Read the bad example to avoid hallucination patterns
+Framework-specific examples are in `.pf-agent-system-mapper/examples/{framework}/`
+(in this repository: `examples/{framework}/`). Selection table:
+`../01-architecture-overview.md` Step 0c.
+
+- Read the good example for patterns to follow (MANDATORY — Step 0c above)
+- Read the bad example to avoid hallucination patterns — each is annotated with ❌ callouts

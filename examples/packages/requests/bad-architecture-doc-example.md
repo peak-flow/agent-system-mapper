@@ -11,6 +11,11 @@
 | Evidence | It's the most popular Python HTTP library |
 | Confidence | `[HIGH]` |
 
+> **❌ PROBLEMS:**
+> - `[HIGH]` is not a methodology tag — only `[VERIFIED]`, `[INFERRED]`, `[NOT_FOUND]`, `[ASSUMED]`, `[NEEDS_VERIFICATION]` exist
+> - "It's the most popular Python HTTP library" is popularity, not evidence — real classification evidence is in the code, e.g. the public-surface re-export at `requests/__init__.py:164`
+> - Missing Category and Overlay Loaded rows required by the 01 output format
+
 ## 2. Component Map
 
 ### Core Components
@@ -38,6 +43,12 @@ Response is parsed and returned
         ↓
 Connection is returned to pool for reuse
 ```
+
+> **❌ PROBLEMS:**
+> - No file paths or citations for any "layer" — every bullet needs a location and a verification tag
+> - Arrow diagram traces execution step-by-step — that belongs in 02-code-flows, not the architecture overview
+> - "Connection is returned to pool for reuse" is wrong for the flow shown: `requests.get()` runs the session in a with-block that closes it on return (`requests/api.py:58-59`), discarding the pool — reuse only happens when the caller holds a `Session`
+> - "Utility Layer - Helper functions and authentication" conflates two unrelated modules: helpers live in `requests/utils.py:1-7`, auth handlers in `requests/auth.py:1-6`
 
 ## 3. Key Data Flows
 
@@ -78,6 +89,13 @@ The library supports multiple authentication methods:
 4. Kerberos - Enterprise SSO integration
 5. NTLM - Windows domain authentication
 
+> **❌ PROBLEMS:**
+> - `[sessions.py:~400]`-style approximations are unverifiable — and wrong: `Session.__enter__` is at `requests/sessions.py:451`, `Session.send` at `requests/sessions.py:673`, `HTTPAdapter.send` at `requests/adapters.py:590` (the `~500` guess for `Session.request` at `requests/sessions.py:500` is luck, not verification)
+> - Bare filenames like `[api.py:62]` resolve against nothing — citations must be relative to the source root (`requests/api.py:62`)
+> - Step-by-step GET tracing with internal bullets ("Merges session settings", "Handles redirects") belongs in 02-code-flows
+> - OAuth, Kerberos, and NTLM are hallucinated: `requests/auth.py` ships only `AuthBase` (:69), `HTTPBasicAuth` (:76), `HTTPProxyAuth` (:99), `HTTPDigestAuth` (:107); the sole "OAuth" occurrence in the whole package is a comment at `requests/models.py:374` about third-party auth hooks
+> - "MD5 hashing" describes algorithm internals — too detailed for an architecture overview
+
 ## 4. External Dependencies
 
 - **urllib3** - Connection pooling and HTTP handling
@@ -87,6 +105,12 @@ The library supports multiple authentication methods:
 - **cryptography** - TLS and encryption support
 - **pyOpenSSL** - Additional SSL features
 
+> **❌ PROBLEMS:**
+> - No Evidence column, no citations — a dependency list must point at the import that proves it
+> - chardet is listed as required, but `requests/compat.py:33-39` tries chardet *or* charset_normalizer, and both are optional (either satisfies detection)
+> - cryptography and pyOpenSSL are not dependencies — they are a conditional fallback imported only when stdlib `ssl` lacks SNI (`requests/__init__.py:130-138`)
+> - idna is real but uncited — the actual use is a lazy import during URL preparation at `requests/models.py:400-401`
+
 ## 5. Performance Characteristics
 
 - Connection pooling reduces latency by 40-60%
@@ -95,9 +119,19 @@ The library supports multiple authentication methods:
 - Memory-efficient streaming for large files
 - Async support via requests-async extension
 
+> **❌ PROBLEMS:**
+> - "40-60%" and "100+ requests" are fabricated numbers with no source — performance claims need `[NEEDS_VERIFICATION]` at minimum
+> - "Automatic retry logic with exponential backoff" is false: `DEFAULT_RETRIES = 0` at `requests/adapters.py:72`, and the `HTTPAdapter` docstring says "By default, Requests does not retry failed connections" (`requests/adapters.py:153-157`) — retries are opt-in
+> - "Async support" is false: zero `async`/`await` anywhere in `requests/*.py`; requests-async is a third-party package, not this library's architecture
+> - Connection pooling is implemented by urllib3's `PoolManager` (`requests/adapters.py:26`), not by requests — attributing it here misleads readers about where the behavior lives
+
 ## 6. Architecture Summary
 
 The requests library follows a clean layered architecture with excellent separation of concerns. The API layer provides a simple interface, while the session and adapter layers handle complexity. This design makes it easy to extend and customize behavior.
+
+> **❌ PROBLEMS:**
+> - Pure editorializing — "clean", "excellent", "easy to extend" are opinions with no citations and no falsifiable content
+> - Says nothing a reader could check: no boundaries, no `[NOT_FOUND]` scoping, no pointer to the actual extension point (`Session.mount` at `requests/sessions.py:799`)
 
 ---
 

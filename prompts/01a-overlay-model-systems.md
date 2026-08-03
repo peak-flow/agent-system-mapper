@@ -5,6 +5,10 @@
 This overlay adds rules **in addition to** the base `01-architecture-overview.md` rules.
 All base anti-hallucination rules still apply.
 
+**Reference example (MANDATORY read before writing):**
+- `../examples/model-systems/good-architecture-doc-example.md` — this overlay applied to a vendored copy of openai/whisper
+- `../examples/model-systems/bad-architecture-doc-example.md` — annotated fame-based hallucination patterns (documenting a famous model from prior knowledge instead of from the repo)
+
 ---
 
 ## Why Model Systems Need Special Rules
@@ -120,14 +124,18 @@ Explicitly document what the system does NOT do:
 ## Boundaries
 
 This system does NOT:
-- [ ] Provide training pipelines [VERIFIED: no training code found]
-- [ ] Support fine-tuning [VERIFIED/NOT_FOUND]
-- [ ] Include evaluation scripts [VERIFIED/NOT_FOUND]
+- [ ] Provide training pipelines [NOT_FOUND: searched "train", "optimizer", "loss", "backward" in repo]
+- [ ] Support fine-tuning [NOT_FOUND: searched "fine_tune", "finetune", "lora", "peft" in repo]
+- [ ] Include evaluation scripts [NOT_FOUND: searched "eval", "benchmark", "wer" in repo]
 
 Out of scope:
 - {capability that would require external services}
 - {capability that would require retraining}
 ```
+
+Absences are always `[NOT_FOUND: search description]` — never `[VERIFIED: no X found]`
+and never a slash form like `[VERIFIED/NOT_FOUND]`. A `[VERIFIED]` tag must cite
+`file:line` where the code exists. See `00-verification-core.md`.
 
 ### Risk & Change Surface
 
