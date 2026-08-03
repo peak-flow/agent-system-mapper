@@ -17,15 +17,17 @@ mkdir -p "${TARGET_DIR}/prompts"
 mkdir -p "${TARGET_DIR}/prompts/lsp"
 mkdir -p "${TARGET_DIR}/examples/laravel"
 mkdir -p "${TARGET_DIR}/examples/fastapi"
-mkdir -p "${TARGET_DIR}/examples/flask"
 mkdir -p "${TARGET_DIR}/examples/livewire"
 mkdir -p "${TARGET_DIR}/examples/react"
+mkdir -p "${TARGET_DIR}/examples/nextjs"
 mkdir -p "${TARGET_DIR}/examples/vue"
+mkdir -p "${TARGET_DIR}/examples/model-systems"
 mkdir -p "${TARGET_DIR}/examples/packages/requests"
 mkdir -p "${TARGET_DIR}/examples/test-surface"
 
 # Download standard prompts
 echo "Downloading standard prompts..."
+curl -fsSL "${BASE_URL}/prompts/00-verification-core.md" -o "${TARGET_DIR}/prompts/00-verification-core.md"
 curl -fsSL "${BASE_URL}/prompts/01-architecture-overview.md" -o "${TARGET_DIR}/prompts/01-architecture-overview.md"
 curl -fsSL "${BASE_URL}/prompts/01a-overlay-model-systems.md" -o "${TARGET_DIR}/prompts/01a-overlay-model-systems.md"
 curl -fsSL "${BASE_URL}/prompts/02-code-flows.md" -o "${TARGET_DIR}/prompts/02-code-flows.md"
@@ -44,17 +46,15 @@ curl -fsSL "${BASE_URL}/prompts/lsp/README.md" -o "${TARGET_DIR}/prompts/lsp/REA
 # Download framework-specific examples
 echo "Downloading examples..."
 
-# Laravel
+# Laravel (architecture + code-flow example pairs)
 curl -fsSL "${BASE_URL}/examples/laravel/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/laravel/good-architecture-doc-example.md"
 curl -fsSL "${BASE_URL}/examples/laravel/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/laravel/bad-architecture-doc-example.md"
+curl -fsSL "${BASE_URL}/examples/laravel/good-code-flow-doc-example.md" -o "${TARGET_DIR}/examples/laravel/good-code-flow-doc-example.md"
+curl -fsSL "${BASE_URL}/examples/laravel/bad-code-flow-doc-example.md" -o "${TARGET_DIR}/examples/laravel/bad-code-flow-doc-example.md"
 
 # FastAPI
 curl -fsSL "${BASE_URL}/examples/fastapi/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/fastapi/good-architecture-doc-example.md"
 curl -fsSL "${BASE_URL}/examples/fastapi/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/fastapi/bad-architecture-doc-example.md"
-
-# Flask
-curl -fsSL "${BASE_URL}/examples/flask/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/flask/good-architecture-doc-example.md" 2>/dev/null || true
-curl -fsSL "${BASE_URL}/examples/flask/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/flask/bad-architecture-doc-example.md" 2>/dev/null || true
 
 # Livewire
 curl -fsSL "${BASE_URL}/examples/livewire/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/livewire/good-architecture-doc-example.md"
@@ -67,6 +67,14 @@ curl -fsSL "${BASE_URL}/examples/react/bad-architecture-doc-example.md" -o "${TA
 # Vue
 curl -fsSL "${BASE_URL}/examples/vue/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/vue/good-architecture-doc-example.md"
 curl -fsSL "${BASE_URL}/examples/vue/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/vue/bad-architecture-doc-example.md"
+
+# Next.js (App Router)
+curl -fsSL "${BASE_URL}/examples/nextjs/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/nextjs/good-architecture-doc-example.md"
+curl -fsSL "${BASE_URL}/examples/nextjs/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/nextjs/bad-architecture-doc-example.md"
+
+# Model-centric systems (whisper) — pairs with prompts/01a-overlay-model-systems.md
+curl -fsSL "${BASE_URL}/examples/model-systems/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/model-systems/good-architecture-doc-example.md"
+curl -fsSL "${BASE_URL}/examples/model-systems/bad-architecture-doc-example.md" -o "${TARGET_DIR}/examples/model-systems/bad-architecture-doc-example.md"
 
 # Package examples
 echo "Downloading package examples..."
@@ -90,7 +98,7 @@ chmod +x "${TARGET_DIR}/verify.py"
 # Self-verifying example (documents verify.py itself; cites only files inside the
 # install dir, so it resolves wherever the mapper is installed).
 mkdir -p "${TARGET_DIR}/examples/verifier"
-curl -fsSL "${BASE_URL}/examples/verifier/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/verifier/good-architecture-doc-example.md" 2>/dev/null || true
+curl -fsSL "${BASE_URL}/examples/verifier/good-architecture-doc-example.md" -o "${TARGET_DIR}/examples/verifier/good-architecture-doc-example.md"
 
 # Create README
 cat > "${TARGET_DIR}/README.md" << 'README'
@@ -156,11 +164,13 @@ The methodology prompt's **Step 8** (Step 7 in the LSP variant) instructs the ag
 | Framework | Good Example | Bad Example |
 |-----------|--------------|-------------|
 | Laravel | `examples/laravel/good-architecture-doc-example.md` | `examples/laravel/bad-architecture-doc-example.md` |
+| Laravel (code flow) | `examples/laravel/good-code-flow-doc-example.md` | `examples/laravel/bad-code-flow-doc-example.md` |
 | FastAPI | `examples/fastapi/good-architecture-doc-example.md` | `examples/fastapi/bad-architecture-doc-example.md` |
-| Flask | `examples/flask/good-architecture-doc-example.md` | `examples/flask/bad-architecture-doc-example.md` |
 | Livewire | `examples/livewire/good-architecture-doc-example.md` | `examples/livewire/bad-architecture-doc-example.md` |
 | React | `examples/react/good-architecture-doc-example.md` | `examples/react/bad-architecture-doc-example.md` |
+| Next.js | `examples/nextjs/good-architecture-doc-example.md` | `examples/nextjs/bad-architecture-doc-example.md` |
 | Vue | `examples/vue/good-architecture-doc-example.md` | `examples/vue/bad-architecture-doc-example.md` |
+| Model-centric (ML/AI) | `examples/model-systems/good-architecture-doc-example.md` | `examples/model-systems/bad-architecture-doc-example.md` |
 
 ## Package Examples
 
@@ -180,6 +190,7 @@ echo "Structure:"
 echo "  ${TARGET_DIR}/"
 echo "  ├── README.md"
 echo "  ├── prompts/"
+echo "  │   ├── 00-verification-core.md (canonical tags + verifier step)"
 echo "  │   ├── 01-architecture-overview.md"
 echo "  │   ├── 01a-overlay-model-systems.md"
 echo "  │   ├── 02-code-flows.md"
@@ -193,12 +204,13 @@ echo "  │       ├── 01-architecture-overview.md (LSP-optimized)"
 echo "  │       ├── 02-code-flows.md (LSP-optimized)"
 echo "  │       └── 02a-recommend-code-flows.md (LSP-optimized)"
 echo "  ├── examples/"
-echo "  │   ├── laravel/"
+echo "  │   ├── laravel/                   (architecture + code-flow pairs)"
 echo "  │   ├── fastapi/"
-echo "  │   ├── flask/"
 echo "  │   ├── livewire/"
 echo "  │   ├── react/"
+echo "  │   ├── nextjs/"
 echo "  │   ├── vue/"
+echo "  │   ├── model-systems/             (ML/AI overlay example)"
 echo "  │   ├── packages/"
 echo "  │   │   └── requests/"
 echo "  │   ├── verifier/                  (self-verifying example)"
